@@ -27,29 +27,32 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 ---
 
-## 3. Reference Architecture: The 4 Layers of Autonomy
+## 3. Reference Architecture: The 4 Layers of AI Agent Autonomy
 
-The Generative AI stack has organically matured into three standardized layers. The Exogram Protocol officially formalizes the required **Fourth Layer** to achieve safe, unsupervised system autonomy.
+The Generative AI stack has organically matured into three standardized layers. The Exogram Protocol officially formalizes the required **Fourth Layer** (`AI Agent Firewall`) to achieve safe, unsupervised system autonomy. Each major AI vendor currently suffers from a fundamental execution gap that only an Execution Authority API can mathematically bridge.
 
 ### Layer 1: The Intelligence Layer (Stochastic Generation)
 - **Role:** Semantics, linguistic translation, and reasoning approximations $\mathcal{L}(x)$.
-- **Components:** Foundational LLMs (Anthropic Claude, OpenAI o1, Meta Llama).
-- **Protocol Bounds:** This layer operates purely probabilistically. It relies on temperature generation algorithms. It MUST NOT be trusted with strict Boolean logic execution due to inherent token generation variance. Prompt engineering is a mitigation, not a boundary.
+- **Components:** Anthropic Claude, OpenAI o1, Meta Llama, Google Gemini.
+- **The Execution Gap:** This layer operates purely probabilistically. It relies on temperature generation algorithms. It MUST NOT be trusted with strict Boolean logic execution due to inherent token generation variance and hallucination. 
+- **The Exogram API Remedy:** By routing proposed payloads to Exogram, intelligence models are decoupled from physical mutations. Exogram mathematically verifies the model's intent before interacting with API infrastructure.
 
-### Layer 2: The Memory Layer (State Retrieval)
+### Layer 2: AI Agent Memory (State Retrieval)
 - **Role:** Contextual grounding utilizing mapping $V_{query} \to \{C_1, C_2 \dots C_k\}$.
-- **Components:** Vector databases (Pinecone, Milvus), Knowledge Graphs, or specific memory engines.
-- **Protocol Bounds:** Retrieves unbounded probabilistic data based on similarity search mechanics (e.g., Cosine Similarity). By definition, retrieval engines are susceptible to context poisoning.
+- **Components:** Pinecone, Milvus, Databricks, Zep, Mem0.
+- **The Execution Gap:** Retrieves unbounded probabilistic data based on similarity search mechanics (e.g., Cosine Similarity). By definition, **AI Agent Memory** engines are susceptible to context poisoning and semantic drift (e.g., retrieving stale database states).
+- **The Exogram API Remedy:** Cryptographically hashes the retrieved memory state into an immutable signature. If the memory retrieves corrupted injected data, the intent graph diverges, and the Exogram Firewall completely drops the tool payload.
 
 ### Layer 3: The Orchestration Layer (Routing & Cyclic Loops)
 - **Role:** Finite State Machine management and execution routing $O_{state} \to O_{next\_state}$.
 - **Components:** LangChain, CrewAI, AutoGen, Letta.
-- **Protocol Bounds:** Orchestrators route payloads between Layer 1 and Layer 2. Crucially, the Orchestration Layer is *architecturally incapable* of natively enforcing absolute security policies because it executes Python/JS instruction loops dictated by probabilistic agents. 
+- **The Execution Gap:** Orchestrators route payloads between Layer 1 and Layer 2. Crucially, the Orchestration Layer is *architecturally incapable* of natively enforcing absolute security policies because it executes Python/JS instruction loops dictated by probabilistic agents. It cannot natively prevent infinite death-loops if the agent hallucinates.
+- **The Exogram API Remedy:** Provides **Deterministic AI Guardrails** at the network edge. Exogram tracks deterministic agent identities and issues hard `HTTP 409 Conflict` interventions to instantly sever runaway orchestration loops.
 
-### Layer 4: The Execution Authority Layer (Deterministic Intercept)
+### Layer 4: The Execution Authority Layer (AI Agent Firewall)
 - **Role:** The immutable, mathematically defined security gate $\mathbf{Execute}(P)$.
 - **Components:** Exogram Protocol EA infrastructure implementations.
-- **Protocol Bounds:** An absolute security boundary structurally isolated from Layers 1-3. It operates natively in physical infrastructure routing, prioritizing network security logic to validate outputs against deterministic constraints *before* authorizing mutation.
+- **Protocol Bounds:** An absolute **AI Agent Firewall** isolated from Layers 1-3. It operates natively in physical infrastructure routing, prioritizing network security logic to validate outputs against deterministic constraints *before* authorizing mutation.
 
 ---
 
