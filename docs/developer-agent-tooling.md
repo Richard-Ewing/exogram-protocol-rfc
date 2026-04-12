@@ -34,8 +34,26 @@ $ exogram scan ./src
 ### 3. Model Context Protocol (MCP) Servers
 The Exogram Execution Authority operates natively as an **MCP Server**, allowing tools like Cursor or Windsurf to inject agentic safety constraints directly into the IDE context windows. 
 
-Instead of configuring your own API interceptors, you configure an MCP Client to point to the `exogram-mcp-server`. The IDE natively respects the execution boundaries, guaranteeing no local tools are executed arbitrarily by your coding assistant without cryptographic authorization.
+Instead of configuring your own API interceptors, you configure an MCP Client to point to the `exogram-mcp-server`. 
 
+#### MCP Isolation Architecture
+```mermaid
+graph TD
+    Cursor[Developer IDE<br/>Cursor / Windsurf] -->|Agent Prompt Request| MCP{Exogram MCP Proxy}
+    
+    MCP -->|Validates Subgraph| FileSystem[(Local Machine Root)]
+    MCP -.-|HTTP 403 Dropped| Terminal[Hidden Bash Execution]
+    
+    style MCP fill:#1A1A2E,stroke:#10B981,stroke-width:3px,color:#fff
+```
+
+The IDE natively respects the execution boundaries, mathematically guaranteeing no local tools are executed arbitrarily by your coding assistant without cryptographic authorization passing the Admissibility formula:
+
+$$
+Execute(MCP) \iff \left( \Gamma_H \subseteq \mathcal{V}_{auth} \right)
+$$
+
+### Configuration
 ```json
 {
   "mcpServers": {
