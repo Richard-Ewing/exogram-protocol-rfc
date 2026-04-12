@@ -78,7 +78,24 @@ agent = initialize_agent(safe_tools, llm, agent="zero-shot-react-description")
 
 ---
 
-## 4. Current RFC Specifications Directory
+## 4. The Infrastructure Documentation Hub
+
+To fully grasp how Execution Authority functions at the physical networking layer, we have extracted our comprehensive research into a 7-part Infrastructure Hub. 
+
+### The 4 Execution Layers
+- [Layer 1: Intelligence](./docs/layer-1-intelligence.md) - Why relying on LLMs for exact execution guarantees is mathematically impossible.
+- [Layer 2: AI Agent Memory](./docs/layer-2-memory.md) - The geometry of Pinecone/Milvus cosine-similarity and why RAG is vulnerable to context poisoning.
+- [Layer 3: Orchestration](./docs/layer-3-orchestration.md) - How LangChain loops scale to infinity, and how Exogram mathematically severs recursive death states.
+- [Layer 4: Execution Authority](./docs/layer-4-execution-authority.md) - The Exogram interception firewall.
+
+### Synthesis & Integration
+- [Synthesis: The Full Stack](./docs/synthesis-the-full-stack.md) - A fully mapped visualization of the 4 layers operating concurrently securely.
+- [Enterprise AI Companies](./docs/enterprise-ai-companies.md) - B2B analysis for SaaS providers: Eliminating liability, hitting SOC2 compliance, and zeroing out recursive token costs.
+- [Developer & Agent Tooling](./docs/developer-agent-tooling.md) - Native integrations via embedded SDKs, CLI safety scanners, and MCP (Model Context Protocol).
+
+---
+
+## 5. Current RFC Specifications Directory
 
 This repository holds multiple interlinked formal specifications. Developers and security architects MUST review all standards to implement a compliant EA infrastructure node.
 
@@ -90,12 +107,12 @@ This repository holds multiple interlinked formal specifications. Developers and
 
 ---
 
-## 5. Reference Implementations
+## 6. Reference Implementations
 
 The rigorous mathematical concepts enclosed in these RFCs are implemented, maintained, and operated in production at scale by the [Exogram Platform](https://exogram.ai). 
 - See the AI Agent Firewall in action via the live simulation tool: [Agent Safety Analyzer](https://exogram.ai/tools/agent-safety-analyzer)
 
-## 6. Contributing & Community
+## 7. Contributing & Community
 
 We actively welcome community pull requests, academic analysis, and formal logic adjustments detailing the fundamental mathematical constraints of deterministic AI execution gateways. 
 
