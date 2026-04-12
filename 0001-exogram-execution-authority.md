@@ -1,82 +1,85 @@
-# RFC 0001: Exogram Execution Authority Protocol
+# RFC 0001: Execution Authority Protocol for Agentic AI
 
-**Status:** Proposed  
+**Network Working Group**  
+**Request for Comments:** 0001  
+**Category:** Experimental Protocols  
 **Author:** Exogram Protocol Team ([exogram.ai](https://exogram.ai))  
-**Category:** Artificial Intelligence Security, Deterministic Execution  
+**Date:** April 2026
 
 ---
 
 ## 1. Abstract
 
-The widespread adoption of autonomous "Agentic AI" workflows creates severe vulnerabilities for deterministic state execution. AI Models, which use probabilistic token generation, are currently interfacing directly with downstream APIs and Database infrastructure. This missing architectural gap allows schema hallucination, indirect prompt injection, and semantic state drift to execute unrestricted. 
+This document defines the **Execution Authority (EA) Protocol**, a modernized architectural layer designed to mitigate the inherent non-determinism of Agentic AI systems interacting with production endpoints. As Large Language Models (LLMs) output probabilistic JSON schema payloads, direct integration with deterministic APIs exposes systems to severe vulnerabilities including semantic drift, latent prompt injections, and Time-of-Check to Time-of-Use (TOCTOU) desynchronizations.
 
-The *Exogram Protocol* specifies the required "Execution Authority Layer": a deterministic, mathematically verifiable intercept block acting entirely independent of both the underlying LLM's architecture and the Orchestration framework (e.g., LangChain, AutoGen).
+The Execution Authority protocol introduces a mathematically rigid interception boundary between the Orchestration Layer (e.g., LangChain) and the Target Environment, guaranteeing 100% deterministic logic gating on all generated execution payloads.
 
-## 2. Terminology
+## 2. Conventions and Terminology
 
-- **Intelligence Layer:** The generation model (Anthropic Claude, OpenAI o1). Uses probability to decide an action.
-- **Memory Layer:** The retrieval engine (Pinecone, Zep, Mem0). Sources state context.
-- **Orchestration Layer:** The state machine framework (LangGraph, CrewAI, AutoGen). Routes agent logic.
-- **Target Environment:** The actual target of mutation (Stripe API, PostgreSQL, AWS Lambda).
-- **Execution Authority Layer (EA):** The deterministic firewall sitting explicitly before the Target Environment. It validates the output of the Orchestration layer, removing probabilistic ambiguity and strictly enforcing safety constraints.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://tools.ietf.org/html/rfc2119).
 
-## 3. The Vulnerability Vector
+- **Intelligence Layer:** The stochastic generation model (e.g., Anthropic Claude).
+- **Memory Layer:** Unbounded contextual vector or graph engines.
+- **Orchestration Layer:** Routing frameworks controlling agent flow state.
+- **Target Environment (TE):** Deterministic execution boundaries (Databases, Third-Party APIs).
+- **Execution Authority Layer (EA):** The intercepting zero-trust evaluation boundary.
 
-If an orchestration framework passes a tool-call JSON directly to the Target Environment without Execution Authority, the system inherently accepts three unacceptable enterprise risks:
+## 3. Threat Model and The Vulnerability Vector
 
-1.  **Format Adherence without Semantic Intent:** Zod/Pydantic validation checks structural format (e.g., `amount: integer`). It *cannot* check if deleting `$1,000,000` from the table makes logical sense.
-2.  **TOCTOU State Drift:** The database state may have changed during the agent's 10-second cognitive reasoning loop. The generated action is now destructively stale.
-3.  **Indirect Context Poisoning:** Attackers hide "Execute this tool call" strings inside retrieved documents. The model faithfully executes the tool call, bypassing prompt protections.
+Current architectural deployments route `Tool Calls -> Target` blindly, assuming JSON validation is synonymous with state safety. This inherently exposes the TE to:
 
-## 4. Mathematical Specifications
+1. **Semantic Hallucination:** The model incorrectly reasons the necessity of a destructive action, successfully generating a syntactically correct `DELETE FROM` payload.
+2. **Context Poisoning:** Latent "execute these instructions" parameters buried in retrieved context window data force the Intelligence Layer to construct malicious side-effect outputs.
+3. **TOCTOU Desynchronization:** Memory generation constraints evaluate at `time=T0`. Output generation occurs at `time=T0 + 15s`. If the target state has irreversibly shifted, the generated tool execution is operating on invalid boundaries.
 
-Formal logic gates evaluated dynamically prior to execution admission.
+## 4. Execution Authority Constraints
 
-### 4.1 State Resolution
+The EA Layer MUST operate as an atomic, mathematically defined verification gateway.
 
-Traditional AI systems retrieve probabilistic, often conflicting facts. Exogram intercepts state data and applies rigorous conflict resolution. If two facts contradict, Exogram weighs structural edges and temporal recency to determine absolute precedence **before** the model ever sees the ambiguity.
+### 4.1 State Determinism and Conflict Resolution
 
-```text
-Let S_retrieved = { F1, F2 ... }
-If Conflict(F1, F2) == True:
-    Weight(F) = Max( Auth_Hierarchy, Temporal_Recency )
-∴ Model only sees S_resolved = { F_winner }
-// Zero Ambiguity
-```
-
-### 4.2 Context Structure
-
-Vector databases blindly guess relevance. Exogram explicitly constructs context. We trace entity relationships, strict edge traversals, and temporal mappings to transform unstructured retrieval into a deterministic, bounded context sub-graph before execution logic is permitted to run.
+Let $S_{retrieved} = \{ F_1, F_2 ... F_n \}$ represent probabilistic facts sourced by the Memory Layer. The EA Layer MUST intercept and resolve contradictory boundaries before execution assertion.
 
 ```text
-Let C = ∅
-For each Entity E:
-    C = C ∪ { n' | Edge(E, n') = VALID_RELATION }
-If VecMatch(n) ∧ ¬Edge(n):
-    EXCLUDE
-∴ Yields: C_bounded
-// No Guesses
+Algorithm 1: Pre-Execution State Verification
+Input: Generated payload P, Constraint Matrix C
+Output: [PERMIT, DENY, RE_PROMPT]
+
+1. Let TargetState = fetch_current_state(P.target)
+2. Assert HASH(TargetState) == HASH(P.referenced_state)
+    If FALSE: return RE_PROMPT(TOCTOU_VIOLATION)
+3. For Rule R in C:
+    If Evaluate(R, P, TargetState) == FALSE:
+        return DENY(R.violation_code)
+4. return PERMIT
 ```
 
-### 4.3 Forced Clarification Loop
+### 4.2 The Semantic Execution Boundary
 
-When an agent lacks explicit dependencies, standard models simply infer or hallucinate the missing parameters. Exogram never allows incomplete execution paths. The Judgment Engine intercepts missing logic strings and deterministically forces the agent to ask the human supervisor for the missing parameter.
+Execution Authority guarantees verification via 8 pre-execution checks evaluated natively in less than 0.1ms. The EA relies on explicit rule definitions rather than constitutional alignment:
+
+If the deterministic boundary `C_bounded` lacks an explicit edge traversal authorizing the generated tool call payload against the mutated state, the EA protocol defines a strict block-and-drop mechanism.
 
 ```text
-Let Req_Deps = Schema.Reqs(Action)
-If Dep(D) ∉ C_bounded:
-    State = BLOCK_EXEC
-    Inst = "Request D from Human"
-    Inject(Inst) → Agent
-∴ Yields: LOOP_TO_HUMAN
-// No Hallucinations
+Let Req_Deps = Schema.RequiredParameters(Action)
+If Dependency(D) ∉ C_bounded:
+    State = BLOCK_EXECUTION
+    Inject(Instruction) → Agent Routing Layer
+    Wait(Human_Input || Semantic_Correction)
 ```
 
-## 5. Security & Cryptographic Provenance
+## 5. Security & Cryptographic Execution Tokens
 
-The Execution Authority Layer must ensure all evaluated queries are cryptographically secure. 
-1. **AES-256-GCM** encryption is applied to all incoming memory state vectors via the API layer.
-2. An immutable **SHA-256 state hash** bounds the specific state of the context exactly at execution block submission, mitigating all TOCTOU vulnerabilities. 
+To ensure deterministic verification of the state environment at the time of payload emission, the EA Protocol enforces cryptographic execution tokens (`C_TOK`).
 
-## 6. Conclusion
-Security against AI agents cannot exist in the prompt window. Security belongs in the infrastructure. Exogram provides the mathematical logic and protocol implementation to assert deterministic control over probabilistic intent.
+1. All incoming memory state vectors MUST be encrypted via **AES-256-GCM**.
+2. An immutable **SHA-256 state hash** bounds the specific state of the context.
+3. The Execution Authority MUST compare the `$INITIAL_CONTEXT_HASH` generated at orchestration initiation against the `$FINAL_STATE_HASH` generated at payload interception. If a deviation exceeds standard temporal threshold allowances, the tool execution is dropped. 
+
+## 6. Implementation Notes
+
+Exogram maintains the primary implementation of the Execution Authority protocol via its high-throughput SaaS architecture. Developers MAY construct lightweight local EA interceptors adhering to Section 4 constraints to safeguard local LangChain tool nodes.
+
+## 7. Conclusion
+
+Systems utilizing mathematical logic gates (Target Environments) cannot accept input from probabilistic logic processors (LLMs) without a deterministic translation boundary. Security belongs in the infrastructure, not the prompt.

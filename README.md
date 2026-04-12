@@ -1,18 +1,42 @@
-# Exogram Protocol RFC
+# Exogram Execution Authority Protocol
 
-[Official Exogram Platform](https://exogram.ai)
+[![Status](https://img.shields.io/badge/RFC%20Status-Draft-yellow.svg)](#) [![Category](https://img.shields.io/badge/Category-Execution%20Security-blue.svg)](#) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-## The Missing 4th Layer in AI Architecture
+This repository contains the Requests for Comments (RFCs) proposing **Execution Authority**, a modernized architectural standard for zero-trust interactions between agentic orchestrators and production infrastructure.
 
-The industry has standardized around three layers: Models (intelligence), Memory (retrieval), and Orchestration (routing). But probabilistic entities are being given direct write-access to deterministic infrastructure (databases, APIs, payment gateways).
+## Architectural Context: The 4th Layer
 
-**The Exogram Protocol** defines the **Execution Authority Layer**. Sits explicitly between the Agentic Orchestrator and the Target Environment. It intercepts generated tool-call payloads, enforces mathematically deterministic constraints in 0.07ms, and permanently eliminates schema hallucination, TOCTOU state drift, and indirect prompt injection.
+The Generative AI industry has standardized around three distinct layers. This protocol introduces the critical, missing fourth layer required for deterministic, unsupervised deployments.
 
-### Why Not Just Use Prompt Engineering or Constitutional AI?
-Constitutional AI reduces the *probability* of a bad action. Execution Authority guarantees it deterministically. A perfectly safe prompt can still result in a hallucinated, destructive JSON payload.
+```mermaid
+graph TD
+    A[Intelligence Layer<br/>Anthropic / OpenAI] -->|Proposes Action| B(Orchestration Layer<br/>LangChain / CrewAI)
+    B -->|Retrieves State| C[(Memory Layer<br/>Pinecone / SQL)]
+    B -->|Generates JSON| D{Execution Authority Layer<br/>Exogram Protocol}
+    D -->|Validates Intent 0.07ms| E[Target Environment<br/>Database / API]
+    D -.->|Blocks / Re-Prompts| B
+    
+    style D fill:#1A1A2E,stroke:#7C3AED,stroke-width:3px,color:#fff
+```
 
-### Core RFC Documents
-- [0001: Execution Authority Protocol Specifications](./0001-exogram-execution-authority.md)
+### The Unmanaged Vulnerability Vector
+Currently, probabilistic entities (Large Language Models) are granted direct write-access to deterministic infrastructure (databases, APIs, payment gateways) via unprotected Orchestration frameworks. This gap creates massive attack surfaces for **schema hallucination**, **Time-of-Check to Time-of-Use (TOCTOU) state drift**, and **indirect context poisoning**.
 
-## Contributing
-We welcome push requests and comments on the fundamental mathematical specifications of deterministic AI execution gating.
+The **Execution Authority Layer**, mathematically defined in these RFCs, intercepts generated tool-call payloads and enforces mathematically deterministic constraints natively in ~0.07ms before they physically interact with external environments.
+
+## Current RFCs
+
+The specifications are organized identically to traditional Internet and Web architecture standards.
+
+| Number | Title | Status |
+| :--- | :--- | :--- |
+| **[RFC-0001](./0001-exogram-execution-authority.md)** | **Execution Authority Protocol Specifications** | Draft / Proposed |
+
+## Reference Implementations
+
+The concepts enclosed in these RFCs are implemented in production by the official [Exogram Platforms](https://exogram.ai) architecture. 
+- You can visibly simulate an Execution Boundary interception here: [Agent Safety Analyzer](https://exogram.ai/tools/agent-safety-analyzer)
+
+## Contributing & Specifications
+
+We welcome community push requests, analysis, and formal logic adjustments detailing the fundamental mathematical specifications of deterministic AI execution gateways. Please read the individual RFCs prior to raising issues regarding edge traversals or state isolation dependencies.
