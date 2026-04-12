@@ -24,19 +24,43 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 - **Target Environment (TE):** Deterministic execution boundaries (Databases, Third-Party APIs).
 - **Execution Authority Layer (EA):** The intercepting zero-trust evaluation boundary.
 
-## 3. Threat Model and The Vulnerability Vector
+## 3. Reference Architecture: The 4 Layers of AI
 
-Current architectural deployments route `Tool Calls -> Target` blindly, assuming JSON validation is synonymous with state safety. This inherently exposes the TE to:
+The Agentic AI stack has organically matured into three standardized layers. The Exogram Protocol officially formalizes the required **Fourth Layer** to achieve safe, unsupervised system autonomy.
+
+### Layer 1: The Intelligence Layer (Stochastic Generation)
+- **Role:** Semantics and reasoning approximations $\mathcal{L}(x)$.
+- **Components:** Foundational LLMs (Anthropic Claude, OpenAI o1, Meta Llama).
+- **Protocol Bounds:** This layer operates purely probabilistically. It MUST NOT be trusted with strict Boolean logic execution due to inherent non-determinism and token generation variance.
+
+### Layer 2: The Memory Layer (State Retrieval)
+- **Role:** Contextual grounding utilizing mapping $V_{query} \to \{C_1, C_2 \dots C_k\}$.
+- **Components:** Vector databases (Pinecone, Milvus), Knowledge Graphs, or specific memory engines (Zep, Mem0).
+- **Protocol Bounds:** Retrieves unbounded probabilistic data based on similarity search mechanics. By definition, retrieval engines are susceptible to context poisoning and semantic ambiguities.
+
+### Layer 3: The Orchestration Layer (Routing & Cyclic Loops)
+- **Role:** Finite State Machine management and execution routing $O_{state} \to O_{next\_state}$.
+- **Components:** LangChain, CrewAI, AutoGen, Letta.
+- **Protocol Bounds:** Orchestrators route payloads between Layer 1 and Layer 2. Crucially, the Orchestration Layer is *architecturally incapable* of natively enforcing absolute security policies because it relies on the probabilistic agent to follow instructions. 
+
+### Layer 4: The Execution Authority Layer (Deterministic Intercept)
+- **Role:** The immutable, mathematically defined security gate $\mathbf{Execute}(P)$.
+- **Components:** Exogram Protocol EA infrastructure implementations.
+- **Protocol Bounds:** An absolute security boundary structurally isolated from Layers 1-3. It operates natively in physical infrastructure, validating probabilistic outputs against deterministic constraint policies *before* authorizing mutation in the Target Environment.
+
+## 4. Threat Model and The Vulnerability Vector
+
+Current architectural deployments route `Tool Calls -> Target` blindly from Layer 3, assuming JSON validation is synonymous with state safety. This inherently exposes the TE to:
 
 1. **Semantic Hallucination:** The model incorrectly reasons the necessity of a destructive action, successfully generating a syntactically correct `DELETE FROM` payload.
 2. **Context Poisoning:** Latent "execute these instructions" parameters buried in retrieved context window data force the Intelligence Layer to construct malicious side-effect outputs.
 3. **TOCTOU Desynchronization:** Memory generation constraints evaluate at `time=T0`. Output generation occurs at `time=T0 + 15s`. If the target state has irreversibly shifted, the generated tool execution is operating on invalid boundaries.
 
-## 4. Execution Authority Constraints
+## 5. Execution Authority Constraints
 
-The EA Layer MUST operate as an atomic, mathematically defined verification gateway. We define the evaluation domain formally below.
+The Layer 4 EA Protocol MUST operate as an atomic, mathematically defined verification gateway. We define the evaluation domain formally below.
 
-### 4.1 State Determinism and Conflict Resolution
+### 5.1 State Determinism and Conflict Resolution
 
 Let $\Sigma_{memory}$ represent the unbounded subset of probabilistic facts sourced by the Memory Layer. The EA Layer MUST intercept and resolve contradictory boundaries before execution assertion, yielding a deterministically bounded sub-graph $C_{bounded}$.
 
@@ -52,7 +76,7 @@ $$
 
 This ensures the Orchestration Layer model only perceives $S_{resolved}$, eliminating probability distributions from the context window entirely.
 
-### 4.2 The Semantic Execution Boundary (Theorem of Admissibility)
+### 5.2 The Semantic Execution Boundary (Theorem of Admissibility)
 
 Execution Authority guarantees verification natively in $< 0.1$ms. Let $\mathcal{T}$ denote the set of all generated Tool Call payloads. Let $P \in \mathcal{T}$ be a specific generated payload.
 
@@ -68,7 +92,7 @@ $$
 \text{If } \exists d \in \Gamma(P) \text{ such that } d \notin C_{bounded} \implies \text{State} \to \text{BLOCK\_EXECUTION} 
 $$
 
-## 5. Security & Cryptographic Execution Tokens
+## 6. Security & Cryptographic Execution Tokens
 
 To ensure deterministic verification of the state environment at the time of payload emission, the EA Protocol enforces cryptographic execution tokens (`C_TOK`).
 
@@ -76,10 +100,10 @@ To ensure deterministic verification of the state environment at the time of pay
 2. An immutable **SHA-256 state hash** bounds the specific state of the context.
 3. The Execution Authority MUST compare the `$INITIAL_CONTEXT_HASH` generated at orchestration initiation against the `$FINAL_STATE_HASH` generated at payload interception. If a deviation exceeds standard temporal threshold allowances, the tool execution is dropped. 
 
-## 6. Implementation Notes
+## 7. Implementation Notes
 
-Exogram maintains the primary implementation of the Execution Authority protocol via its high-throughput SaaS architecture. Developers MAY construct lightweight local EA interceptors adhering to Section 4 constraints to safeguard local LangChain tool nodes.
+Exogram maintains the primary implementation of the Execution Authority protocol via its high-throughput SaaS architecture. Developers MAY construct lightweight local EA interceptors adhering to Section 5 constraints to safeguard local LangChain tool nodes.
 
-## 7. Conclusion
+## 8. Conclusion
 
 Systems utilizing mathematical logic gates (Target Environments) cannot accept input from probabilistic logic processors (LLMs) without a deterministic translation boundary. Security belongs in the infrastructure, not the prompt.
