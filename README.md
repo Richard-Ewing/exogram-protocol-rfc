@@ -59,13 +59,34 @@ graph TD
     style D fill:#1A1A2E,stroke:#10B981,stroke-width:3px,color:#fff
 ```
 
+### SDK Integration Example (LangChain)
+
+```python
+from exogram import ExogramGuard
+from langchain.agents import initialize_agent
+
+# Instead of passing tools directly to an LLM, wrap them in the Protocol Guard
+safe_tools = ExogramGuard.wrap_tools(
+    tools=[database_write_tool],
+    policy="STRICT_DETERMINISM",
+    tenant_id="enterprise_12"
+)
+
+# The Orchestrator operates normally, but is now cryptographically bound
+agent = initialize_agent(safe_tools, llm, agent="zero-shot-react-description")
+```
+
 ---
 
-## 4. Current RFC Specifications
+## 4. Current RFC Specifications Directory
+
+This repository holds multiple interlinked formal specifications. Developers and security architects MUST review all standards to implement a compliant EA infrastructure node.
 
 | Number | Title | Scope | Status |
 | :--- | :--- | :--- | :--- |
 | **[RFC-0001](./0001-exogram-execution-authority.md)** | **Execution Authority Protocol Specifications** | Complete mathematical modeling of AI Agent Guardrails, Payload Admissibility Theorems, and Threat Vector resolution. | Draft / Proposed |
+| **[RFC-0002](./0002-intent-based-permissioning.md)** | **Intent-Based Permissioning (IBP)** | Defining the failure of IAM/RBAC models and the standard for dynamic, semantic permissioning grids. | Draft / Proposed |
+| **[RFC-0003](./0003-cryptographic-execution-tokens.md)** | **Cryptographic Execution Tokens ($C_{TOK}$)** | Network layer byte-structures, SHA-256 state hashing algorithms, and strict millisecond TTL payload constraints. | Draft / Proposed |
 
 ---
 
