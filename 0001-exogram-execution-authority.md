@@ -34,39 +34,39 @@ Current architectural deployments route `Tool Calls -> Target` blindly, assuming
 
 ## 4. Execution Authority Constraints
 
-The EA Layer MUST operate as an atomic, mathematically defined verification gateway.
+The EA Layer MUST operate as an atomic, mathematically defined verification gateway. We define the evaluation domain formally below.
 
 ### 4.1 State Determinism and Conflict Resolution
 
-Let $S_{retrieved} = \{ F_1, F_2 ... F_n \}$ represent probabilistic facts sourced by the Memory Layer. The EA Layer MUST intercept and resolve contradictory boundaries before execution assertion.
+Let $\Sigma_{memory}$ represent the unbounded subset of probabilistic facts sourced by the Memory Layer. The EA Layer MUST intercept and resolve contradictory boundaries before execution assertion, yielding a deterministically bounded sub-graph $C_{bounded}$.
 
-```text
-Algorithm 1: Pre-Execution State Verification
-Input: Generated payload P, Constraint Matrix C
-Output: [PERMIT, DENY, RE_PROMPT]
+$$
+S_{retrieved} = \{ f_1, f_2, \dots, f_n \}
+$$
 
-1. Let TargetState = fetch_current_state(P.target)
-2. Assert HASH(TargetState) == HASH(P.referenced_state)
-    If FALSE: return RE_PROMPT(TOCTOU_VIOLATION)
-3. For Rule R in C:
-    If Evaluate(R, P, TargetState) == FALSE:
-        return DENY(R.violation_code)
-4. return PERMIT
-```
+For any conflicting facts $f_i, f_j$ where $Conflict(f_i, f_j) = \mathbf{True}$, the EA Layer applies the absolute weighting function $W(f) = \max(\text{AuthHierarchy}, \text{TemporalRecency})$:
 
-### 4.2 The Semantic Execution Boundary
+$$
+\forall (f_i, f_j) \in S_{retrieved}, \quad f_{survivor} = \arg\max_{f \in \{f_i, f_j\}} W(f)
+$$
 
-Execution Authority guarantees verification via 8 pre-execution checks evaluated natively in less than 0.1ms. The EA relies on explicit rule definitions rather than constitutional alignment:
+This ensures the Orchestration Layer model only perceives $S_{resolved}$, eliminating probability distributions from the context window entirely.
 
-If the deterministic boundary `C_bounded` lacks an explicit edge traversal authorizing the generated tool call payload against the mutated state, the EA protocol defines a strict block-and-drop mechanism.
+### 4.2 The Semantic Execution Boundary (Theorem of Admissibility)
 
-```text
-Let Req_Deps = Schema.RequiredParameters(Action)
-If Dependency(D) ∉ C_bounded:
-    State = BLOCK_EXECUTION
-    Inject(Instruction) → Agent Routing Layer
-    Wait(Human_Input || Semantic_Correction)
-```
+Execution Authority guarantees verification natively in $< 0.1$ms. Let $\mathcal{T}$ denote the set of all generated Tool Call payloads. Let $P \in \mathcal{T}$ be a specific generated payload.
+
+The Execution is authorized if and only if both the Cryptographic State $\mathcal{H}$ remains valid and the intent dependencies $\Gamma(P)$ are completely satisfied by the deterministic sub-graph $C_{bounded}$:
+
+$$
+\forall P \in \mathcal{T}, \quad Execute(P) \iff \left( \mathcal{H}(S_{target}) = \mathcal{H}(S_{context}) \right) \land \left( \Gamma(P) \subseteq C_{bounded} \right)
+$$
+
+If $\Gamma(P) \not\subseteq C_{bounded}$ (a required edge is absent safely authorizing the payload against the mutated state), the EA protocol executes a strict `DROP` and yields control back to the state loop, enforcing a **Human-on-the-Loop** verification requirement:
+
+$$
+\text{If } \exists d \in \Gamma(P) \text{ such that } d \notin C_{bounded} \implies \text{State} \to \text{BLOCK\_EXECUTION} 
+$$
 
 ## 5. Security & Cryptographic Execution Tokens
 
