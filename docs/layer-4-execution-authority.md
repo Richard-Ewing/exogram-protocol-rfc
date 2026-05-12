@@ -55,7 +55,7 @@ sequenceDiagram
         Firewall->>Firewall: Mint C_TOK JWT with Millisecond TTL
         Firewall->>JWT_Node: Safe HTTP Forward + C_TOK
         JWT_Node-->>Agent: Mutated State (200 OK)
-    else Matrix Execution Blocked (Hallucination)
+    else Matrix Execution Blocked (Probabilistic Variance)
         Firewall-->>Agent: Hard HTTP 403 / 409 Intercept
         Note over Agent: Physical World is Protected. Agent adjusts token generation.
     end
@@ -68,4 +68,4 @@ $$
 \text{If } GlobalState = \text{LOCKED} \implies \forall P \in \mathcal{T}, Execute(P) = \mathbf{False}
 $$
 
-Because the Layer 4 architecture is physically external to the agentic processing loop, no prompt-injection or hallucination can bypass the firewall block.
+Because the Layer 4 architecture is physically external to the agentic processing loop, no prompt-injection or probabilistic variance can bypass the firewall block.

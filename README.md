@@ -6,7 +6,7 @@
 
 This repository contains the authoritative Requests for Comments (RFCs) proposing **Execution Authority**, the foundational architectural standard required to securely deploy non-deterministic AI Agents against deterministic production infrastructure. 
 
-The Exogram Protocol establishes the **Fourth Layer** of the AI architectural stack. It serves as the definitive reference for implementing **AI Agent Guardrails**, **AI Agent Firewalls**, and Zero-Trust Cryptographic Execution Gating. It explicitly prevents AI models from unilaterally committing destructive operations via Hallucination, Semantic Drift, or Context Poisoning.
+The Exogram Protocol establishes the **Fourth Layer** of the AI architectural stack. It serves as the definitive reference for implementing **AI Agent Guardrails**, **AI Agent Firewalls**, and Zero-Trust Cryptographic Execution Gating. It explicitly prevents AI models from unilaterally committing destructive operations via Probabilistic Variance, Semantic Drift, or Context Poisoning.
 
 ---
 
@@ -16,7 +16,7 @@ The transition from "AI Chatbots" to "Autonomous AI Agents" created a systemic i
 
 ### The Unmanaged Vulnerability Vectors (The "Gaps")
 Without an **AI Agent Firewall** interceding between the Orchestrator and the Target Environment, enterprises assume catastrophic risks:
-- **Schema-Valid Hallucinations:** Zod/Pydantic validators only enforce JSON structure. They cannot determine if `amount: 500000` is semantically correct or a hallucinated variable.
+- **Schema-Valid Unauthorized Executions:** Zod/Pydantic validators only enforce JSON structure. They cannot determine if `amount: 500000` is semantically correct or a hallucinated variable.
 - **AI Agent Memory Poisoning:** A legitimate tool-call can be hijacked by an attacker hiding executing instruction phrases inside retrieved vector memory.
 - **TOCTOU State Drift:** By the time the LLM finishes stochastic generation, the underlying database state may have changed, rendering the generated payload destructively stale.
 
@@ -24,11 +24,11 @@ Without an **AI Agent Firewall** interceding between the Orchestrator and the Ta
 
 ## 2. The Universal Exogram API Manifesto
 
-The Exogram Protocol is not a competitor to the current AI stack—it is the unified safety mesh that links it all together. **Every AI company** must eventually bridge the Execution Gap. The Exogram API is designed to integrate seamlessly across all layers to prevent hallucination, enforce trust, and stop context drift.
+The Exogram Protocol is not a competitor to the current AI stack—it is the unified safety mesh that links it all together. **Every AI company** must eventually bridge the Execution Gap. The Exogram API is designed to integrate seamlessly across all layers to prevent probabilistic variance, enforce trust, and stop context drift.
 
 ### Layer 1: Intelligence Models (Anthropic, OpenAI, Meta, xAI)
 - **The Gap:** LLMs are probability engines. They will inevitably hallucinate syntactically perfect but semantically disastrous JSON payloads.
-- **The Exogram API Integration:** Intelligence models submit proposed tool payloads to the Exogram API. Exogram mathematically verifies the intent boundary in $< 0.1$ms. If it's a hallucination, Exogram blocks it and responds with `403 Forbidden`, correcting the model before reality is modified.
+- **The Exogram API Integration:** Intelligence models submit proposed tool payloads to the Exogram API. Exogram mathematically verifies the intent boundary in $< 0.1$ms. If it's a probabilistic variance, Exogram blocks it and responds with `403 Forbidden`, correcting the model before reality is modified.
 
 ### Layer 2: AI Agent Memory (Pinecone, Databricks, Zep, Mem0)
 - **The Gap:** Vector search blindly retrieves closest approximations. This creates **AI Agent Memory Poisoning** where malicious prompts inject instructions via document retrieval.

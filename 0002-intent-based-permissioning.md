@@ -27,7 +27,7 @@ sequenceDiagram
     participant LangChain as Orchestrator
     participant AWS as Target Cloud Environment
     
-    LLM->>LangChain: Syntactically Valid Hallucination {"cmd": "DROP USERS"}
+    LLM->>LangChain: Syntactically Valid Probabilistic Variance {"cmd": "DROP USERS"}
     Note over LangChain: LangChain holds Admin IAM Role
     LangChain->>AWS: Pass Command with Admin Credentials
     Note over AWS: AWS Authenticates IAM Role Identity
@@ -81,7 +81,7 @@ stateDiagram-v2
     Mint_Ephemeral_JWT --> Target_Infrastructure : Pass $C_{tok}$
     Target_Infrastructure --> [*] : Execute Action
     
-    Compare_Boundaries --> Blackhole_Request : Intent = Invalid (Hallucination)
+    Compare_Boundaries --> Blackhole_Request : Intent = Invalid (Probabilistic Variance)
     Blackhole_Request --> Trigger_Alert
     Trigger_Alert --> [*] : Agent Severed
 ```

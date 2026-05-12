@@ -26,7 +26,7 @@ graph TD
     end
     
     subgraph Layer 2: Memory
-        VectorDB[(Pinecone / Memory Graph<br>State Retrieval)]
+        VectorDB[(Pinecone / State Graph<br>State Retrieval)]
     end
     
     subgraph Layer 3: Orchestration

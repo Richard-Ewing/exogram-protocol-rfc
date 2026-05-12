@@ -10,7 +10,7 @@ Because LLMs cannot natively run Python or JavaScript on their own servers, the 
 ## The Execution Gap: Turing Completeness Vulnerability
 Orchestration frameworks are incredibly powerful integration utilities, but they are architecturally incapable of acting as security boundaries. 
 
-Any LangChain or AutoGen routing loop is inherently a Turing Complete execution graph. Because they grant the `Agent` the authority to determine what state it should transition to next via probability, they are subservient to hallucination. A widely exploited vulnerability in Multi-Agent workflows is the **Recursive Death Spiral**.
+Any LangChain or AutoGen routing loop is inherently a Turing Complete execution graph. Because they grant the `Agent` the authority to determine what state it should transition to next via probability, they are subservient to probabilistic variance. A widely exploited vulnerability in Multi-Agent workflows is the **Recursive Death Spiral**.
 
 ### The Recursive $While$ Loop
 If an LLM hallucinates an invalid string into an Integer API parameter, the Target API will reject it. LangChain's built-in tool error behavior is to throw the error back to the LLM and ask it to "fix it."

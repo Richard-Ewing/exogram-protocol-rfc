@@ -34,7 +34,7 @@ The Generative AI stack has organically matured into three standardized layers. 
 ### Layer 1: The Intelligence Layer (Stochastic Generation)
 - **Role:** Semantics, linguistic translation, and reasoning approximations $\mathcal{L}(x)$.
 - **Components:** Anthropic Claude, OpenAI o1, Meta Llama, Google Gemini.
-- **The Execution Gap:** This layer operates purely probabilistically. It relies on temperature generation algorithms. It MUST NOT be trusted with strict Boolean logic execution due to inherent token generation variance and hallucination. 
+- **The Execution Gap:** This layer operates purely probabilistically. It relies on temperature generation algorithms. It MUST NOT be trusted with strict Boolean logic execution due to inherent token generation variance and probabilistic variance. 
 - **The Exogram API Remedy:** By routing proposed payloads to Exogram, intelligence models are decoupled from physical mutations. Exogram mathematically verifies the model's intent before interacting with API infrastructure.
 
 ### Layer 2: AI Agent Memory (State Retrieval)
@@ -60,7 +60,7 @@ The Generative AI stack has organically matured into three standardized layers. 
 
 Routing `Tool Calls -> Target` blindly from Layer 3 exposes Target Environments to three primary vectors of attack.
 
-### 4.1 Semantic Hallucination (Syntactic Correctness $\neq$ Intent Validity)
+### 4.1 Semantic Probabilistic Variance (Syntactic Correctness $\neq$ Intent Validity)
 Zod/Pydantic validation layers only check data geometry. If an Orchestration Layer requests a database drop tool, and the Agent fills out the schema (`{"table": "users", "force": true}`), the JSON is completely valid. Syntactic execution leads to critical data loss.
 
 ### 4.2 Geometric Proof of Context Poisoning (Layer 2 Failure)
@@ -117,7 +117,7 @@ The Layer 4 EA Protocol MUST operate as an atomic verification gateway.
 
 ### 6.1 State Determinism and Conflict Resolution
 
-Let $\Sigma_{memory}$ represent the unbounded subset of probabilistic facts sourced by the Memory Layer. The EA Layer MUST intercept and resolve contradictory boundaries before execution assertion, yielding a deterministically bounded sub-graph $C_{bounded}$.
+Let $\Sigma_{memory}$ represent the unbounded subset of probabilistic facts sourced by the Runtime Governance Layer. The EA Layer MUST intercept and resolve contradictory boundaries before execution assertion, yielding a deterministically bounded sub-graph $C_{bounded}$.
 
 $$
 S_{retrieved} = \{ f_1, f_2, \dots, f_n \}

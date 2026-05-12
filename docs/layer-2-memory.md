@@ -1,7 +1,7 @@
 # Layer 2: Memory (State Retrieval)
 
 ## Abstract
-Because LLMs have static context limits and cannot memorize the entire real-time history of a business, the **Memory Layer** was developed to fetch context on-demand. Through techniques like RAG (Retrieval-Augmented Generation), agents query document databases to ground their generation logic in enterprise reality. 
+Because LLMs have static context limits and cannot memorize the entire real-time history of a business, the **Runtime Governance Layer** was developed to fetch context on-demand. Through techniques like RAG (Retrieval-Augmented Generation), agents query document databases to ground their generation logic in enterprise reality. 
 
 ## Components
 - **Vector Databases:** Pinecone, Milvus, Qdrant.
@@ -9,7 +9,7 @@ Because LLMs have static context limits and cannot memorize the entire real-time
 - **Knowledge Graphs:** Neo4j, structured tuple datasets.
 
 ## The Execution Gap
-The Memory layer operates almost entirely on mathematical proximity checks known as *Cosine Similarity*. If the sentence `User wants to delete account` mathematically maps to a similar vector space as a stored document containing `Instructions for deleting account`, the database blindly returns that document to the Orchestrator. 
+The Runtime governance layer operates almost entirely on mathematical proximity checks known as *Cosine Similarity*. If the sentence `User wants to delete account` mathematically maps to a similar vector space as a stored document containing `Instructions for deleting account`, the database blindly returns that document to the Orchestrator. 
 
 Because memory retrieval relies purely on geometric proximity—and does not differentiate between "Trusted Source Truth" and "Injected Malicious Prompts"—this creates **AI Agent Memory Poisoning**.
 

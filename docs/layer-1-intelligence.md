@@ -7,14 +7,14 @@ The foundation of the modern Generative AI stack is the **Intelligence Layer**. 
 - **Foundational Models:** Anthropic Claude (e.g., 3.5 Sonnet, 3 Opus), OpenAI (GPT-4o, o1), Meta Llama 3.
 - **Role:** Semantics, linguistic translation, reasoning approximations $\mathcal{L}(x)$, and abstract logic puzzles.
 
-## The Mathematical Proof of Hallucination Limit
+## The Mathematical Proof of Probabilistic Variance Limit
 Intelligence models do not "understand" true or false in a rigid programmatic sense. They calculate the semantic proximity of the next token based on the Softmax Probability activation function applied to a distribution vector $z$:
 
 $$
 P(y_i \mid x) = \frac{e^{z_i / T}}{\sum_{j=1}^{K} e^{z_j / T}}
 $$
 
-Where $T$ is the temperature parameter. Because $P(y_i \mid x) > 0$ for all tokens inside the operational subset $K$, the probability of a semantic hallucination over infinite tokens approaches absolute zero certainty.
+Where $T$ is the temperature parameter. Because $P(y_i \mid x) > 0$ for all tokens inside the operational subset $K$, the probability of a semantic probabilistic variance over infinite tokens approaches absolute zero certainty.
 
 When you ask an LLM to interface with a Database, you are asking a probability engine to write strict Boolean logic. This invariably leads to the phenomenon of **Latent Divergence**.
 
@@ -54,7 +54,7 @@ stateDiagram-v2
 Because Zod and Pydantic validators only enforce *geometry* (e.g., "is the action a string?", "is server_id a String?"), hallucinated variables silently bypass traditional API validation. The JSON is perfectly valid; the *intent* is destructive.
 
 ## The Exogram Remedy
-By classifying the Intelligence Layer purely as an "inference proposer," we decouple the LLM from actual physical mutation. The LLM generates the JSON, but it routes it to the **Exogram API**. Exogram utilizes hard mathematical checks to verify the LLM's hallucination against allowed system graph constraints, saving the target infrastructure from semantic drift.
+By classifying the Intelligence Layer purely as an "inference proposer," we decouple the LLM from actual physical mutation. The LLM generates the JSON, but it routes it to the **Exogram API**. Exogram utilizes hard mathematical checks to verify the LLM's probabilistic variance against allowed system graph constraints, saving the target infrastructure from semantic drift.
 
 $$
 \text{If } \Gamma(Payload) \not\subseteq C_{EnterpriseBounds} \implies \text{Emit(HTTP 403)}
