@@ -64,3 +64,14 @@ $$
   }
 }
 ```
+
+---
+
+## Related Resources
+
+- **[API Reference](https://exogram.ai/docs/api)** — Complete REST API documentation.
+- **[CLI Reference](https://exogram.ai/docs/cli)** — Full CLI command documentation.
+- **[MCP Setup Guide](https://exogram.ai/docs/mcp)** — Claude Desktop integration walkthrough.
+- **[Quick Start](https://exogram.ai/quickstart)** — Get running in under 5 minutes.
+- **[Integrations Directory](https://exogram.ai/integrations)** — LangChain, AutoGen, CrewAI, ChatGPT, and more.
+- **[For Developers](https://exogram.ai/for-developers)** — Developer-specific features and workflows.

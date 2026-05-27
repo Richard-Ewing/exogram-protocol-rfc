@@ -53,3 +53,13 @@ $$
 $$
 
 If the memory engine retrieves corrupted, injected data, the resulting semantic intent matrix mathematically diverges from the Exogram security firewall graph. Exogram immediately isolates the vector and drops the payload before it ever touches a target Database or API.
+
+---
+
+## Related Resources
+
+- **[Exogram Architecture — Deep Technical Dive](https://exogram.ai/architecture)** — See how Layer 2 fits into the full governance stack.
+- **[Glossary: AI Memory Poisoning](https://exogram.ai/glossary/ai-memory-poisoning)** — Definition and prevention strategies.
+- **[Use Case: Prevent AI Agent Data Exfiltration](https://exogram.ai/use-cases/prevent-ai-agent-data-exfiltration)** — How Exogram stops memory-poisoned payloads.
+- **[Compare: Exogram vs LangChain](https://exogram.ai/compare/exogram-vs-langchain)** — Orchestration vs governance infrastructure.
+- **[Learning Hub](https://exogram.ai/learn)** — Guides and deep-dives on AI agent security.

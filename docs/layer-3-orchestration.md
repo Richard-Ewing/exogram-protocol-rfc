@@ -42,3 +42,13 @@ $$
 $$
 
 Before LangChain can burn $5,000 hitting Stripe's API with an infinite retry-loop, Exogram severs the HTTP connection at the network edge with an `HTTP 429 Too Many Requests` or `HTTP 409 Conflict`, mathematically neutralizing the death-loop logic block.
+
+---
+
+## Related Resources
+
+- **[Use Case: Fix AutoGen Infinite Loops](https://exogram.ai/use-cases/fix-autogen-infinite-loop)** — Step-by-step guide to preventing recursive agent loops.
+- **[Use Case: Prevent AI Agent Double-Spend](https://exogram.ai/use-cases/prevent-ai-agent-double-spend)** — Stop duplicate financial transactions from agent retries.
+- **[Compare: Exogram vs CrewAI](https://exogram.ai/compare/exogram-vs-crewai)** — Multi-agent orchestration vs governance infrastructure.
+- **[Integrations Directory](https://exogram.ai/integrations)** — LangChain, CrewAI, AutoGen, and more.
+- **[API Reference](https://exogram.ai/docs/api)** — Integrate Exogram into your orchestration pipeline.

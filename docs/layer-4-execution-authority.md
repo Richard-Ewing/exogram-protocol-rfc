@@ -69,3 +69,13 @@ $$
 $$
 
 Because the Layer 4 architecture is physically external to the agentic processing loop, no prompt-injection or probabilistic variance can bypass the firewall block.
+
+---
+
+## Related Resources
+
+- **[Protocol Specification (EAAP)](https://exogram.ai/protocol)** — The open protocol standard defining execution authority.
+- **[RFC-0001: Execution Authority Protocol](https://exogram.ai/rfc/0001)** — Full technical specification with cryptographic proofs.
+- **[How It Works — Persistent & Verifiable AI Governance](https://exogram.ai/how-it-works)** — Interactive walkthrough of the verification pipeline.
+- **[Proving Ground — Live Demo](https://exogram.ai/proving-ground)** — Test execution authority in your browser.
+- **[Security & Compliance](https://exogram.ai/security-and-compliance)** — SOC 2, HIPAA, and GDPR compliance details.

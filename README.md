@@ -117,3 +117,24 @@ The rigorous mathematical concepts enclosed in these RFCs are implemented, maint
 We actively welcome community pull requests, academic analysis, and formal logic adjustments detailing the fundamental mathematical constraints of deterministic AI execution gateways. 
 
 **Join us in building the unified execution authority for the next generation of autonomous systems. Please star the repository if you support mathematical AI agent guardrails!**
+
+---
+
+## 8. Resources & Links
+
+| Resource | URL |
+| :--- | :--- |
+| **Protocol Specification (EAAP)** | [exogram.ai/protocol](https://exogram.ai/protocol) |
+| **Architecture Deep-Dive** | [exogram.ai/architecture](https://exogram.ai/architecture) |
+| **How It Works** | [exogram.ai/how-it-works](https://exogram.ai/how-it-works) |
+| **API Reference** | [exogram.ai/docs/api](https://exogram.ai/docs/api) |
+| **Quick Start Guide** | [exogram.ai/quickstart](https://exogram.ai/quickstart) |
+| **Proving Ground (Live Demo)** | [exogram.ai/proving-ground](https://exogram.ai/proving-ground) |
+| **Compare: Exogram vs Alternatives** | [exogram.ai/compare](https://exogram.ai/compare) |
+| **Use Cases** | [exogram.ai/use-cases](https://exogram.ai/use-cases) |
+| **Learning Hub** | [exogram.ai/learn](https://exogram.ai/learn) |
+| **Glossary** | [exogram.ai/glossary](https://exogram.ai/glossary) |
+| **Blog** | [exogram.ai/blog](https://exogram.ai/blog) |
+| **RFC-0001 (Web)** | [exogram.ai/rfc/0001](https://exogram.ai/rfc/0001) |
+| **Integrations Directory** | [exogram.ai/integrations](https://exogram.ai/integrations) |
+| **Security & Compliance** | [exogram.ai/security-and-compliance](https://exogram.ai/security-and-compliance) |

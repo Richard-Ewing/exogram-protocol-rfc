@@ -61,3 +61,13 @@ $$
 $$
 
 Security can never reside inside the probability matrix. It must reside outside of it.
+
+---
+
+## Related Resources
+
+- **[Exogram Architecture — Deep Technical Dive](https://exogram.ai/architecture)** — See how Layer 1 fits into the full governance stack.
+- **[How It Works — Persistent & Verifiable AI Governance](https://exogram.ai/how-it-works)** — Interactive walkthrough of the Exogram verification pipeline.
+- **[Protocol Specification (EAAP)](https://exogram.ai/protocol)** — The open protocol standard for execution authority.
+- **[API Reference](https://exogram.ai/docs/api)** — Integrate Exogram into your agent framework.
+- **[RFC-0001: Execution Authority Protocol](https://exogram.ai/rfc/0001)** — The full technical specification.

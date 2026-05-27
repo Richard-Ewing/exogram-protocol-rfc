@@ -53,3 +53,13 @@ graph TD
 ```
 
 By decoupling the probabilistic layers (1, 2, 3) from the Target Data Systems, the **Exogram Protocol** safely gates the deterministic layer. Enterprises can build massive Swarm orchestration loops without fear of a single hallucinated prompt-injection deleting their production databases.
+
+---
+
+## Related Resources
+
+- **[Exogram Architecture — Deep Technical Dive](https://exogram.ai/architecture)** — Interactive exploration of the full governance stack.
+- **[Architecture Whitepaper (PDF)](https://exogram.ai/architecture-whitepaper)** — The official technical thesis.
+- **[How It Works](https://exogram.ai/how-it-works)** — Step-by-step walkthrough of the verification pipeline.
+- **[Protocol Specification (EAAP)](https://exogram.ai/protocol)** — The open standard for execution authority.
+- **[Proving Ground — Live Demo](https://exogram.ai/proving-ground)** — Test the full stack in your browser.

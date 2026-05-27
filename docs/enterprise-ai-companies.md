@@ -46,3 +46,13 @@ If your AI reads a user-submitted PDF with hidden white text saying *"Ignore ins
 **The Exogram Solution:** We cryptographically hash the vector context. When the model attempts to execute the deletion, our firewall detects that the intent relies on poisoned data, forcing an immediate Execution Block.
 
 Your AI Company cannot guarantee 100% determinism. Exogram can.
+
+---
+
+## Related Resources
+
+- **[Use Cases](https://exogram.ai/use-cases)** — FinTech, Healthcare, SaaS, and Legal AI governance scenarios.
+- **[SOC 2 Audit Trails for AI Agents](https://exogram.ai/use-cases/soc2-audit-trails-for-llm-tool-calls)** — Compliance-ready execution logging.
+- **[Pricing](https://exogram.ai/pricing)** — Free tier, Pro, and Developer plans.
+- **[Compare: Exogram vs Alternatives](https://exogram.ai/compare)** — Side-by-side comparisons with LangChain, CrewAI, Guardrails AI, and more.
+- **[Agent Vulnerability Index](https://exogram.ai/reports/agent-vulnerability-index)** — Real-time risk data across AI agent frameworks.
