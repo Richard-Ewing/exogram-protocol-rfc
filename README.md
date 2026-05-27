@@ -46,7 +46,7 @@ The Exogram Protocol is not a competitor to the current AI stack—it is the uni
 
 ## 3. The Solution: Cryptographic Execution Authority 
 
-The **Exogram Execution Authority Layer** physically separates semantic inference from logical execution. It intercepts generated tool-call payloads, enforces mathematically deterministic constraints natively in ~0.07ms, and generates cryptographic Execution Tokens verifying admissibility.
+The **Exogram Governance Infrastructure** makes autonomous intelligence persistent and verifiable. It physically separates semantic inference from logical execution, intercepts generated tool-call payloads, enforces mathematically deterministic constraints natively in ~0.07ms, and generates cryptographic Execution Tokens verifying admissibility.
 
 ```mermaid
 graph TD
