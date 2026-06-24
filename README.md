@@ -32,6 +32,9 @@ The foundational baseline that maintains identity, goals, and operational state 
 ### Layer II: Dynamic Governance (The Policy Engine)
 The policy layer that defines the rigid operational boundaries, permission rules, and execution constraints for any given agent. Translates human intent into deterministic operational boundaries.
 
+![Exogram Live Knowledge Graph Substrate](https://raw.githubusercontent.com/Richard-Ewing/exogram-protocol-rfc/main/docs/assets/knowledge-graph-viz.png)
+*(Explore the Live Interactive Knowledge Graph Substrate at [exogram.ai/dashboard/ledger](https://exogram.ai/dashboard/ledger))*
+
 ### Layer III: Deterministic Admissibility (The Execution Gateway)
 The runtime execution bouncer. Instead of asking if a probabilistic model *can* perform an action, this layer deterministically evaluates whether the execution *should* be allowed to occur at all, intercepting out-of-bounds actions before they hit your infrastructure.
 
