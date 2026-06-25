@@ -33,7 +33,7 @@ The foundational baseline that maintains identity, goals, and operational state 
 The policy layer that defines the rigid operational boundaries, permission rules, and execution constraints for any given agent. Translates human intent into deterministic operational boundaries.
 
 ![Exogram Live Knowledge Graph Substrate](https://raw.githubusercontent.com/Richard-Ewing/exogram-protocol-rfc/main/docs/assets/knowledge-graph-viz.png)
-*(Explore the Live Interactive Knowledge Graph Substrate at [exogram.ai/dashboard/ledger](https://exogram.ai/dashboard/ledger))*
+*(Explore the Live Interactive Knowledge Graph Substrate at [exogram.ai/rfc/0001](https://exogram.ai/rfc/0001))*
 
 ### Layer III: Deterministic Admissibility (The Execution Gateway)
 The runtime execution bouncer. Instead of asking if a probabilistic model *can* perform an action, this layer deterministically evaluates whether the execution *should* be allowed to occur at all, intercepting out-of-bounds actions before they hit your infrastructure.
