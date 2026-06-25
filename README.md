@@ -35,7 +35,7 @@ The policy layer that defines the rigid operational boundaries, permission rules
 ![Exogram Live Knowledge Graph Substrate](https://raw.githubusercontent.com/Richard-Ewing/exogram-protocol-rfc/main/docs/assets/knowledge-graph-viz.png)
 *(Explore the Live Interactive Knowledge Graph Substrate at [exogram.ai/rfc/0001](https://exogram.ai/rfc/0001))*
 
-### Layer III: Deterministic Admissibility (The Execution Gateway)
+### Layer III: Target Validation (The Execution Gateway)
 The runtime execution bouncer. Instead of asking if a probabilistic model *can* perform an action, this layer deterministically evaluates whether the execution *should* be allowed to occur at all, intercepting out-of-bounds actions before they hit your infrastructure.
 
 ### Layer IV: The Auditable Ledger (Memory v2)
@@ -106,7 +106,7 @@ We are building in public. Below are the open Requests for Comment (RFCs) regard
 | RFC | Title | Status |
 |-----|-------|--------|
 | [RFC-01](rfcs/rfc-01-persistent-context-schema.md) | The Persistent Context Schema (EXO-STATE) | **Draft** |
-| [RFC-02](rfcs/rfc-02-deterministic-admissibility-gateway.md) | Deterministic Admissibility Gateway | **Draft** |
+| [RFC-02](rfcs/rfc-02-target-validation-gateway.md) | Target Validation Gateway | **Draft** |
 | [RFC-03](rfcs/rfc-03-auditable-ledger-format.md) | The Auditable Ledger Format | **Draft** |
 
 For access to the private alpha, or to contribute to the protocol design, contact the Exogram team.
