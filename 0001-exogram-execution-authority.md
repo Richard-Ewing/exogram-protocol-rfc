@@ -167,8 +167,26 @@ Upon intent validation, the EA Node MUST generate a SHA-256 hash representative 
 }
 ```
 
-### 7.2 Target Environment Verification
-The downstream database or API proxy MUST compute the live state hash the millisecond before mutation. If the current hash does not correspond explicitly to the `state_hash` embedded inside the Execution Token (`C_TOK`), it MUST reject the transaction, mathematically eliminating Time-Of-Check to Time-Of-Use vulnerabilities.
+### 6. Execution Authority Implementation Requirements
+
+### 6.1 State Verification
+The EA proxy MUST retrieve the identical context hash from the environment memory before execution.
+
+### 6.2 Layer 2 Semantic Mapping (Knowledge Graph)
+To effectively validate context hash drift, the EA MUST construct and maintain a Layer 2 Knowledge Graph using the following strict schema:
+
+- **Semantic Entities**:
+  - `entity_type: agent | concept | organization | event | default`
+  - Rendered with high-contrast glowing vectors corresponding to identity groups (e.g. Cyan = Core Runtime, Green = Grounded Concepts).
+- **Inferred Relationships**:
+  - `source_entity_id -> target_entity_id`
+  - Rendered with `linkCurvature: 0.25` indicating directional dependencies.
+  - Hover states MUST present inline semantic reasoning.
+
+The UI representing this mapping acts as the visual proof of cryptographic verification, assuring administrators that the EA's intent matrices match the environment state perfectly.
+
+### 6.3 Blocking Execution
+If $\Delta t_{state} \neq 0$ (state has changed) or $I_{proposed} \not\subset \Gamma$ (intent breaches guardrails), the EA MUST intercept the request and return:, mathematically eliminating Time-Of-Check to Time-Of-Use vulnerabilities.
 
 ---
 
