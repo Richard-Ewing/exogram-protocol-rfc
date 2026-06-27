@@ -24,22 +24,22 @@ What the industry currently calls "memory" is fundamentally inadequate. Autonomo
 
 ## 2. The Four-Layer Architecture
 
-Exogram is a comprehensive infrastructure stack designed to intercept, govern, and verify autonomous execution.
+Exogram is a second brain and safety layer designed to organize, govern, and verify AI agent executions.
 
-### Layer I: Persistent Context (The State Graph)
-The foundational baseline that maintains identity, goals, and operational state across completely different models and platforms. Exogram unifies disconnected memory silos into a single, portable, and persistent state graph.
+### Layer I: The Memory Base (Identity & Portability)
+The foundational baseline that lets an AI agent remember who they are, what their goals are, and keep their state consistent across different models (like OpenAI, Claude, or Gemini). 
 
-### Layer II: Dynamic Governance (The Policy Engine)
-The policy layer that defines the rigid operational boundaries, permission rules, and execution constraints for any given agent. Translates human intent into deterministic operational boundaries.
+### Layer II: Obsidian for AI (The Self-Wiring Memory Graph)
+Exogram automatically reads conversation logs, extracts key concepts, and links them together on a connected knowledge map. Like a personal second brain, it keeps the AI organized so it never gets confused by contradicting or stale facts.
 
 ![Exogram Live Knowledge Graph Substrate](https://raw.githubusercontent.com/Richard-Ewing/exogram-protocol-rfc/main/docs/assets/knowledge-graph-viz.png)
 *(Explore the Live Interactive Knowledge Graph Substrate at [exogram.ai/rfc/0001](https://exogram.ai/rfc/0001))*
 
-### Layer III: Target Validation (The Execution Gateway)
-The runtime execution bouncer. Instead of asking if a probabilistic model *can* perform an action, this layer deterministically evaluates whether the execution *should* be allowed to occur at all, intercepting out-of-bounds actions before they hit your infrastructure.
+### Layer III: The Execution Gatekeeper (The Action Bouncer)
+Evaluates proposed AI agent actions against simple, non-negotiable rules. Instead of hoping the model behaves, this layer blocks dangerous steps (like deleting databases or looping money) in 0.07ms before they touch your live system.
 
-### Layer IV: The Auditable Ledger (Memory v2)
-An append-only, verifiable history of every action, context shift, and governance decision. It provides execution traceability, transforming passive AI memory into enterprise-grade accountability.
+### Layer IV: Tamper-Proof Audit Trail (The Ledger)
+An unchangeable timeline of every fact stored and every action validated. It provides clear history and accountability, proving exactly why an agent performed any given action.
 
 ---
 
