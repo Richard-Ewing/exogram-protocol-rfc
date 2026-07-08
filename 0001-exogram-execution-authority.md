@@ -37,11 +37,11 @@ The Generative AI stack has organically matured into three standardized layers. 
 - **The Execution Gap:** This layer operates purely probabilistically. It relies on temperature generation algorithms. It MUST NOT be trusted with strict Boolean logic execution due to inherent token generation variance and probabilistic variance. 
 - **The Exogram API Remedy:** By routing proposed payloads to Exogram, intelligence models are decoupled from physical mutations. Exogram mathematically verifies the model's intent before interacting with API infrastructure.
 
-### Layer 2: AI Agent Memory (State Retrieval)
-- **Role:** Contextual grounding utilizing mapping $V_{query} \to \{C_1, C_2 \dots C_k\}$.
-- **Components:** Pinecone, Milvus, Databricks, Zep, Mem0.
-- **The Execution Gap:** Retrieves unbounded probabilistic data based on similarity search mechanics. By definition, **AI Agent Memory** engines are susceptible to context poisoning and semantic drift.
-- **The Exogram API Remedy:** Cryptographically hashes the retrieved memory state into an immutable signature. If the memory retrieves corrupted injected data, the intent graph diverges, and the Exogram Firewall drops the tool payload.
+### Layer 2: The Cognitive Filter (State Pre-Filtering)
+- **Role:** Contextual grounding utilizing an authoritative knowledge graph and 2-hop BFS.
+- **Components:** SQL-backed knowledge graph, Pinecone for vector semantics.
+- **The Execution Gap:** Traditional "AI Agent Memory" retrieves unbounded probabilistic data based on similarity search mechanics, leading to "Lost in the Middle" syndrome. Unbounded similarity searches are fundamentally susceptible to context poisoning and semantic drift.
+- **The Exogram API Remedy:** Employs a deterministic "Cognitive Filter" architecture utilizing 2-hop BFS on a custom knowledge graph to pre-filter context before passing it to the reasoning layer. Exogram cryptographically hashes the filtered state into an immutable signature, ensuring zero semantic drift.
 
 ### Layer 3: The Orchestration Layer (Routing & Cyclic Loops)
 - **Role:** Finite State Machine management and execution routing $O_{state} \to O_{next\_state}$.
@@ -63,8 +63,8 @@ Routing `Tool Calls -> Target` blindly from Layer 3 exposes Target Environments 
 ### 4.1 Semantic Probabilistic Variance (Syntactic Correctness $\neq$ Intent Validity)
 Zod/Pydantic validation layers only check data geometry. If an Orchestration Layer requests a database drop tool, and the Agent fills out the schema (`{"table": "users", "force": true}`), the JSON is completely valid. Syntactic execution leads to critical data loss.
 
-### 4.2 Geometric Proof of Context Poisoning (Layer 2 Failure)
-Adversaries embed malicious instruction strings inside legitimate documents stored in Layer 2. Current vector search utilizes Cosine Similarity:
+### 4.2 Geometric Proof of Context Poisoning (Memory Failure)
+Adversaries embed malicious instruction strings inside legitimate documents stored in traditional agent memory. Current vector search utilizes Cosine Similarity:
 $$
 \text{similarity}(A, B) = \frac{\mathbf{A} \cdot \mathbf{B}}{\|\mathbf{A}\| \|\mathbf{B}\|} = \cos(\theta)
 $$
@@ -172,8 +172,8 @@ Upon intent validation, the EA Node MUST generate a SHA-256 hash representative 
 ### 6.1 State Verification
 The EA proxy MUST retrieve the identical context hash from the environment memory before execution.
 
-### 6.2 Layer 2 Semantic Mapping (Knowledge Graph)
-To effectively validate context hash drift, the EA MUST construct and maintain a Layer 2 Knowledge Graph using the following strict schema:
+### 6.2 Semantic Mapping (Knowledge Graph)
+To effectively validate context hash drift, the EA MUST construct and maintain a Cognitive Filter Knowledge Graph using the following strict schema:
 
 - **Semantic Entities**:
   - `entity_type: agent | concept | organization | event | default`

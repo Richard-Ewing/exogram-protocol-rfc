@@ -1,24 +1,22 @@
-# Exogram: Persistent Infrastructure for Autonomous Intelligence
+# Exogram: Immutable Trust & Governance Ledger for AI Agents
 
-**Mission:** To make autonomous intelligence persistent and verifiable.
+**Mission:** To make autonomous AI decisions verifiable and safe.
 
 [![Status: Alpha Architecture](https://img.shields.io/badge/Status-Alpha_Architecture-blue.svg)](#) [![Category: Trust Infrastructure](https://img.shields.io/badge/Category-Execution_Trust_Infrastructure-green.svg)](#) [![Standard: Exogram Protocol v1](https://img.shields.io/badge/Standard-Exogram_Protocol_v1-purple.svg)](#)
 
-Exogram is the persistent intelligence substrate designed to sit beneath autonomous models. It provides the memory, continuity, governance, and verifiable execution state required to make autonomous systems operationally safe to deploy at scale.
+Exogram is the deterministic governance and audit layer designed to sit beneath autonomous models. It provides the immutable record, capability boundaries, and verifiable execution state required to make autonomous systems operationally safe to deploy at scale.
 
-**Strategic Stance:** Exogram does not replace model intelligence. Models are incredible cognition engines. Exogram preserves operational continuity, governance, and trust across them. We are building the SSL certificate for agentic execution.
+**Strategic Stance:** Exogram does not replace model intelligence. Models are incredible reasoning engines. Exogram enforces boundaries and trust across them. We are building the SSL certificate for agentic execution.
 
 ---
 
 ## 1. The Core Vulnerability
 
-> **The intelligence of frontier models improves constantly, but the continuity of the context never does.**
+> **The intelligence of frontier models improves constantly, but the auditability of their actions does not.**
 
-We are entering a world where users and autonomous agents live across multiple language models, fragmented workflows, and disparate execution environments. Yet every AI product still starts from zero. Operational context is currently trapped inside vendor silos. 
+We are entering a world where autonomous agents are given the keys to databases, payment gateways, and system terminals. However, when an agent makes a mistake, deletes customer files, or gets stuck in a billing loop, there is no way to trace or block the action before it hits infrastructure.
 
-The industry currently treats context as a user convenience. That is a critical miscalculation. As agents move from being passive chatbots to persistent, autonomous operators touching real infrastructure, passive memory ceases to be sufficient. 
-
-What the industry currently calls "memory" is fundamentally inadequate. Autonomous execution requires an **auditable ledger**. If an autonomous system forgets its constraints, loses its operational history, or drops its permission boundaries as it moves between environments, it stops being reliable infrastructure. It becomes an operational hazard. 
+What the industry currently calls "memory" is fundamentally inadequate. Autonomous execution requires an **immutable ledger**. If an autonomous system forgets its constraints, loses its operational history, or drops its permission boundaries, it stops being reliable infrastructure. It becomes an operational hazard.
 
 ---
 
@@ -26,20 +24,20 @@ What the industry currently calls "memory" is fundamentally inadequate. Autonomo
 
 Exogram is a second brain and safety layer designed to organize, govern, and verify AI agent executions.
 
-### Layer I: The Memory Base (Identity & Portability)
-The foundational baseline that lets an AI agent remember who they are, what their goals are, and keep their state consistent across different models (like OpenAI, Claude, or Gemini). 
+### Layer I: The Thinker (AI Proposal)
+Your AI plans, decides, and proposes what action or API tool call to make next. 
 
-### Layer II: Obsidian for AI (The Self-Wiring Memory Graph)
-Exogram automatically reads conversation logs, extracts key concepts, and links them together on a connected knowledge map. Like a personal second brain, it keeps the AI organized so it never gets confused by contradicting or stale facts.
+### Layer II: The Cognitive Filter (Persistent Knowledge Graph)
+Every fact your AI learns is stored as a signed, timestamped entry in a SQL-backed knowledge graph. Exogram uses 2-hop BFS semantic vector search to eliminate "Lost in the Middle" syndrome. Old versions stay visible; nothing is ever lost or hidden.
 
 ![Exogram Live Knowledge Graph Substrate](https://raw.githubusercontent.com/Richard-Ewing/exogram-protocol-rfc/main/docs/assets/knowledge-graph-viz.png)
 *(Explore the Live Interactive Knowledge Graph Substrate at [exogram.ai/rfc/0001](https://exogram.ai/rfc/0001))*
 
-### Layer III: The Execution Gatekeeper (The Action Bouncer)
-Evaluates proposed AI agent actions against simple, non-negotiable rules. Instead of hoping the model behaves, this layer blocks dangerous steps (like deleting databases or looping money) in 0.07ms before they touch your live system.
+### Layer III: The Gate (Action Validation)
+Before the AI acts, Exogram checks the request against safety policies, blocking dangerous steps in 0.07ms.
 
-### Layer IV: Tamper-Proof Audit Trail (The Ledger)
-An unchangeable timeline of every fact stored and every action validated. It provides clear history and accountability, proving exactly why an agent performed any given action.
+### Layer IV: The Proof (Cryptographic Audit)
+Every decision is cryptographically signed and chained. Regulators and auditors see complete, tamper-evident proof of why an agent acted.
 
 ---
 
