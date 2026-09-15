@@ -1,4 +1,4 @@
-# RFC 0001: Verifiable Reality & Execution Authority Protocol for Large Language Models
+# RFC 0001: Persistent Memory, Epistemic Grounding & Execution Authority for Large Language Models
 
 **Network Working Group**  
 **Request for Comments:** 0001  
@@ -10,15 +10,15 @@
 
 ## 1. Abstract
 
-This document defines the **Exogram Execution Authority & Grounded Reality Protocol**, an open architectural networking standard designed to anchor Large Language Models (LLMs) and autonomous agents in persistent, verifiable reality. 
+This specification defines the Exogram Protocol: an open standard for attaching persistent memory, evidence-based grounding, and deterministic execution safety to Large Language Models.
 
-While frontier language models possess exceptional reasoning capabilities within an ephemeral context window, their direct interaction with enterprise state and external mutation endpoints exposes systems to non-deterministic failure modes: hallucinated memory continuity, context poisoning, Time-Of-Check to Time-Of-Use (TOCTOU) state desynchronization, and unvalidated tool mutations.
+The protocol addresses three problems that exist in every major LLM deployment today:
 
-The Exogram Protocol establishes a mathematically bounded substrate situated beneath the model layer. It guarantees:
-1. **Bounded, Unpoisoned Context Assembly** via 2-hop topological BFS traversal across an immutable, encrypted entity-relationship graph.
-2. **Epistemic Sentence Grounding** linking generated statements to cryptographic provenance records.
-3. **Sub-0.07ms Deterministic Action Authorization** preventing unauthorized tool executions or state corruption before physical execution occurs.
-4. **Cryptographic State Hashing** establishing a continuous, tamper-evident audit trail for every model response and action.
+1. **Memory loss.** Models don't accumulate knowledge about users, projects, or decisions across sessions. Every conversation starts blank.
+2. **Unverifiable answers.** Models present all claims with equal confidence. Users cannot inspect which evidence, if any, supports a given statement.
+3. **Unsafe execution.** When models are granted tool-use capabilities, nothing except the model's own judgment prevents destructive actions against production systems.
+
+The Exogram Protocol introduces a four-layer substrate beneath the model that provides durable memory via an encrypted entity graph, per-sentence evidence attribution, and deterministic action authorization that operates without invoking another LLM.
 
 ---
 
@@ -26,191 +26,183 @@ The Exogram Protocol establishes a mathematically bounded substrate situated ben
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](https://tools.ietf.org/html/rfc2119).
 
-- **Execution Token ($C_{tok}$):** A cryptographic JWT (JSON Web Token) binding a specific tool mutation payload to a specific validated state hash.
-- **Intent Dependencies ($\Gamma$):** The complete set of required subgraph constraints an action payload must satisfy to be deemed admissible.
-- **Cognitive Filter:** The deterministic 2-hop graph extraction mechanism that isolates user namespace context and eliminates "Lost in the Middle" degradation.
-- **State Drift:** The condition where persistent environment state changes between initial context retrieval ($T_0$) and action execution ($T_1$).
-- **Authority Runtime:** The deterministic execution engine enforcing protocol invariants, rate limits, and policy gates at the network boundary.
+- **Ledger Entry:** A timestamped, encrypted fact stored in the user's personal vault. Contains a canonical claim, topic, source provenance, confidence score, and hash.
+- **Entity Graph:** A topological knowledge graph connecting people, organizations, projects, documents, events, and concepts extracted from ledger entries.
+- **Epistemic Grounding:** The process of linking individual sentences in a model response to the specific ledger entries and sources that justify them.
+- **Authority Runtime:** The deterministic execution gate that evaluates proposed tool actions against policy rules using code (not LLM inference).
+- **Execution Token ($C_{tok}$):** A cryptographic JWT binding a validated action payload to a specific state hash. Expires after a defined TTL.
+- **State Hash ($\mathcal{H}$):** SHA-256 hash of the current context state at evaluation time, used to detect drift before execution.
 
 ---
 
-## 3. Reference Architecture: The 4 Layers of LLM Reality & Autonomy
+## 3. Architecture
 
-The modern AI stack requires an authoritative substrate beneath the model to achieve reliable, continuous operation. The Exogram Protocol formalizes this 4-layer architecture:
+### 3.1 Layer 1: Model Inference
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│ Layer 1: The Inference Engine (LLM Reasoning & Proposal)    │
-│ Probabilistic synthesis: Claude, GPT, Gemini, Llama         │
-└──────────────────────────────┬──────────────────────────────┘
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│ Layer 2: The Cognitive Filter (Temporal Entity Graph)       │
-│ 2-hop topological BFS, epistemic citation, conflict logging │
-└──────────────────────────────┬──────────────────────────────┘
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│ Layer 3: The Authority Runtime (Governed Autonomy Gate)     │
-│ Sub-0.07ms deterministic invariant check (ALLOW / DENY)     │
-└──────────────────────────────┬──────────────────────────────┘
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│ Layer 4: The Proof (Cryptographic State & Audit Chain)      │
-│ Chained SHA-256 state hashes, immutable event ledger        │
-└─────────────────────────────────────────────────────────────┘
-```
+The language model generates reasoning, text, and proposed tool calls. The model operates on pre-grounded context assembled by Layer 2 rather than raw, unbounded retrieval. This reduces hallucination surface area and eliminates the "Lost in the Middle" degradation that occurs when models are given long, loosely relevant context.
 
-### Layer 1: The Inference Engine (Stochastic Generation)
-- **Role:** Natural language understanding, contextual reasoning, code generation, and hypothesis formulation $\mathcal{L}(x)$.
-- **Components:** Frontier reasoning models (Anthropic Claude, OpenAI GPT, Google Gemini, Meta Llama).
-- **The Operational Challenge:** Operates probabilistically via temperature-based token sampling. It MUST NOT be solely relied upon for Boolean security validation or unverified historical memory recall.
-- **Protocol Integration:** The model receives pre-grounded, topologically bounded context and generates proposed responses or structured tool call intents.
+The protocol is model-agnostic. The reference implementation routes across Gemini, Claude, and local models (Ollama/Phi-4) with provider-level failover.
 
-### Layer 2: The Cognitive Filter (Temporal Memory Ledger & Entity Graph)
-- **Role:** Contextual grounding utilizing an authoritative, encrypted SQLite WAL ledger and 2-hop BFS entity graph.
-- **The Operational Challenge:** Traditional vector search (cosine similarity on text chunks) retrieves semantically similar but factually irrelevant or out-of-date records, leading to prompt bloat, high latency, and context poisoning.
-- **The Exogram Remedy:** Implements a deterministic "Cognitive Filter" architecture. By querying an entity-relationship graph via 2-hop BFS, Exogram extracts strictly relevant subgraphs, detects contradictory statements, and binds evidence directly to generated sentences.
+### 3.2 Layer 2: Memory & Entity Graph
 
-### Layer 3: The Authority Runtime (Governed Autonomy Gate)
-- **Role:** Deterministic action authorization and loop suppression $\mathbf{Evaluate}(P) \to \{ \text{ALLOW}, \text{DENY} \}$.
-- **The Operational Challenge:** Multi-agent orchestrators execute instructions dictated by probabilistic LLMs without binary invariant verification, risking recursive infinite loops and unauthorized destructive mutations.
-- **The Exogram Remedy:** Acts as an inline Authority Runtime. Evaluates 14 protocol invariants in under 0.07ms using server-side logic gates (zero LLM inference in the critical security path), issuing hard `HTTP 409 Conflict` or `HTTP 403 Forbidden` interventions when constraints are breached.
+This is the layer that makes Exogram different from a chatbot with vector search bolted on.
 
-### Layer 4: The Proof (Cryptographic State & Audit Chain)
-- **Role:** Tamper-evident, cryptographically chained verification ledger.
-- **The Exogram Remedy:** Every state transition, context snapshot, and authorized execution generates a SHA-256 state hash. Hashes are linked sequentially, providing users, developers, and regulators with undeniable mathematical proof of why an answer was given and what evidence supported each mutation.
+**The problem with traditional RAG:** Vector similarity retrieval (cosine similarity over embeddings) finds text that *sounds* related. It doesn't distinguish between a verified fact from last week and an unverified assertion from six months ago. It doesn't know that two records contradict each other. It doesn't understand that "the project" in document A refers to the same project mentioned in email B.
 
----
-
-## 4. Threat Model and Failure Modes of Ungrounded LLMs
-
-Directly binding probabilistic LLM tool calls to physical execution targets introduces three primary failure vectors:
-
-### 4.1 Syntactic Correctness vs. Semantic Reality
-Schema validators (Zod, Pydantic) verify data structure, not operational reality. If an LLM generates a syntactically perfect deletion payload (`{"target": "production_database", "force": true}`), schema validation passes. Without semantic intent verification against active policy invariants, catastrophic data loss occurs.
-
-### 4.2 Context Poisoning & Semantic Drift in Traditional Memory
-Traditional vector retrieval uses Cosine Similarity:
 $$
 \text{similarity}(A, B) = \frac{\mathbf{A} \cdot \mathbf{B}}{\|\mathbf{A}\| \|\mathbf{B}\|} = \cos(\theta)
 $$
-Because vector summation does not distinguish between authoritative facts and unverified user assertions, malicious prompt injections or outdated statements retain high cosine similarity. The Exogram Protocol prevents this by scoping context strictly to verified, namespace-isolated entity subgraphs with explicit provenance.
 
-### 4.3 Time-Of-Check to Time-Of-Use (TOCTOU) Desynchronization
-1. LLM retrieves user balance ($100) at $T_0$.
-2. Model spends 15 seconds generating reasoning logic for a $100 transfer.
-3. Concurrently, an external transaction deducts $50 at $T_1$.
-4. At $T_2$, the model executes the $100 mutation against a drifted environment state.
-5. The Exogram Protocol eliminates this by binding the execution token to the exact SHA-256 context state hash $\mathcal{H}(S_{context})$. If state changes prior to execution, the token is invalidated immediately.
+Cosine similarity measures semantic distance. It says nothing about truth, recency, or provenance.
+
+**The Exogram approach:** Instead of dumping text chunks into the prompt, the protocol maintains:
+
+1. **An encrypted fact ledger** (SQLite WAL with PBKDF2/Fernet encryption at rest) where each entry is a timestamped, attributed claim with a confidence score that decays over time unless reinforced.
+2. **A topological entity graph** connecting people, projects, events, organizations, and concepts. Relationships are typed and weighted.
+3. **Bounded graph traversal** via 2-hop BFS from seed entities mentioned in the user's query. This produces a small, relevant subgraph instead of an unbounded similarity search across the entire corpus.
+
+When a user asks "Can we deploy the authentication update today?", the system doesn't search for documents containing the word "deploy." It identifies the authentication project entity, traverses its relationships to find recent integration test results, deployment policy versions, and team availability, and assembles that specific context for the model.
+
+**Epistemic sentence grounding:** After the model generates a response, individual claims are linked back to the ledger entries and sources that support them. The user sees inline citations they can inspect: which fact, when it was recorded, what its confidence score is, and where it came from.
+
+### 3.3 Layer 3: Authority Runtime (Governed Autonomy)
+
+When the model proposes an action (API call, database mutation, file write, code execution), the request passes through a deterministic policy gate before reaching the target system.
+
+The gate evaluates the request against compile-time policy rules:
+
+$$
+\forall P \in \mathcal{T}, \quad \mathbf{Execute}(P) \iff \left( \mathcal{H}(S_{target}) = \mathcal{H}(S_{context}) \right) \land \left( \Gamma(P) \subseteq C_{bounded} \right)
+$$
+
+Where $\Gamma(P)$ is the set of constraints the action must satisfy and $C_{bounded}$ is the validated context subgraph.
+
+Two properties matter here:
+
+1. **No LLM in the safety path.** The gate is deterministic code. It evaluates boolean conditions, not probabilities. A schema validator checks data structure. The Authority Runtime checks intent against policy.
+2. **State hash binding.** The execution token is bound to the SHA-256 hash of the context state at evaluation time. If the underlying state changes between evaluation and execution (a TOCTOU race condition), the token is invalidated and the action is blocked.
+
+If the action is denied, the user receives a structured diagnostic explaining which policy was violated and why.
+
+### 3.4 Layer 4: Audit Trail
+
+Every context assembly, model response, and execution decision generates a SHA-256 hash chained to the previous state:
+
+```json
+{
+  "state_hash": "b8f1e40a2c9d8e7b...",
+  "parent_hash": "a1b2c3d4e5f67890...",
+  "timestamp": "2026-09-14T21:05:34Z",
+  "event_type": "response_generated",
+  "context_snapshot_id": "ctx-8f72c91a",
+  "sources_cited": ["ledger-001", "ledger-047", "web-003"]
+}
+```
+
+This chain provides tamper-evident proof of what the model knew at the time it generated a response. Users can inspect the evidence trail. Compliance teams can audit decisions. Developers can debug unexpected behavior by replaying the exact context state.
 
 ---
 
-## 5. Protocol Execution Intercept Sequence
-
-The protocol enforces a clean boundary between model reasoning and physical execution:
+## 4. Protocol Execution Sequence
 
 ```mermaid
 sequenceDiagram
-    participant User as User / Application
-    participant Filter as Layer 2 (Cognitive Filter)
-    participant LLM as Layer 1 (Inference Engine)
+    participant User as User
+    participant Memory as Layer 2 (Memory Graph)
+    participant LLM as Layer 1 (Model)
     participant Gate as Layer 3 (Authority Runtime)
-    participant Target as Execution Target / API
-    participant Ledger as Layer 4 (Audit Ledger)
-    
-    User->>Filter: Query / Task Request
-    Filter->>Filter: 2-Hop BFS Graph Traversal & Conflict Resolution
-    Filter->>LLM: Pass Bounded Context Subgraph + State Hash
-    LLM->>User: Stream Grounded Response with Sentence Citations
-    opt Tool Mutation Proposed
-        LLM->>Gate: Submit Proposed Action Payload + State Hash
-        Gate->>Gate: Evaluate 14 Protocol Invariants (< 0.07ms)
-        alt Action Permitted
-            Gate->>Ledger: Record Signed Execution Token (C_tok)
-            Gate->>Target: Forward Authorized Execution
-            Target-->>User: Mutation Result Confirmed
-        else Constraint Breached / State Drifted
-            Gate->>User: HTTP 403 Forbidden + Diagnostic Proof
+    participant Target as External System
+    participant Ledger as Layer 4 (Audit Trail)
+
+    User->>Memory: Question or task
+    Memory->>Memory: 2-hop graph traversal, conflict resolution
+    Memory->>LLM: Bounded context + state hash
+    LLM->>User: Grounded response with source citations
+    opt Tool action proposed
+        LLM->>Gate: Action payload + state hash
+        Gate->>Gate: Evaluate policy rules (deterministic)
+        alt Permitted
+            Gate->>Ledger: Record execution token
+            Gate->>Target: Forward authorized action
+            Target-->>User: Result
+        else Denied or state drifted
+            Gate->>User: Structured denial + diagnostic
         end
     end
 ```
 
 ---
 
-## 6. Mathematical Foundations: Grounding and Admissibility
+## 5. What This Looks Like in Practice
 
-### 6.1 State Determinism and Conflict Resolution
-Let $\Sigma_{memory}$ represent the universe of stored facts. The Cognitive Filter extracts a bounded, conflict-free subgraph $C_{bounded}$:
+**Contextual defaults (zero prompt tax):**
+A user asks: "Where should we go for vacation in October?"
 
-$$
-S_{retrieved} = \{ f_1, f_2, \dots, f_n \}
-$$
+A traditional LLM asks five clarifying questions before producing anything useful. The Exogram Protocol already has the user's entity graph: their home location, family members, relevant October milestones, travel preferences, and budget constraints. The model receives this context pre-assembled and produces a personalized recommendation without the user having to write a briefing document.
 
-For any pair of conflicting facts $f_i, f_j$ where $\text{Conflict}(f_i, f_j) = \mathbf{True}$, the protocol applies an explicit recency, provenance, and authority weighting function $W(f)$:
+**Evidence-grounded responses:**
+When the model states "The latest integration test failed after the middleware change," the user can click the inline citation and see: Ledger Entry #4f12, recorded September 14th, confidence 98%, source: CI pipeline webhook. The claim isn't just plausible. It's traceable.
 
-$$
-\forall (f_i, f_j) \in S_{retrieved}, \quad f_{survivor} = \arg\max_{f \in \{f_i, f_j\}} W(f)
-$$
-
-### 6.2 The Theorem of Governed Admissibility
-Let $\mathcal{T}$ denote the set of proposed tool mutation payloads. Execution is authorized if and only if the current state hash matches the evaluated state hash and all intent constraints $\Gamma(P)$ are satisfied within $C_{bounded}$:
-
-$$
-\forall P \in \mathcal{T}, \quad \mathbf{Execute}(P) \iff \left( \mathcal{H}(S_{target}) = \mathcal{H}(S_{context}) \right) \land \left( \Gamma(P) \subseteq C_{bounded} \right)
-$$
-
-If $\Gamma(P) \not\subseteq C_{bounded}$, the Authority Runtime drops the mutation and issues an `HTTP 403 Forbidden` with structured diagnostic feedback.
+**Safe execution:**
+An autonomous agent proposes `DROP TABLE production_users`. The Authority Runtime evaluates this against policy rule SEC_RULE_04 (no destructive mutations on production clusters), denies execution, and returns a structured diagnostic. The denial happens in under 0.1ms, without invoking another model.
 
 ---
 
-## 7. Cryptographic Execution Gating
+## 6. Failure Modes Without This Protocol
 
-### 7.1 State Hash Binding
-Upon policy approval, the Authority Runtime generates an ephemeral cryptographic execution token ($C_{tok}$):
+### 6.1 Hallucinated Continuity
+Without persistent memory, models confuse project versions, invent past agreements, and present fabricated context with the same confidence as verified facts. The user has no way to distinguish real memory from generated text.
 
-```json
-{
-  "alg": "HS256",
-  "typ": "JWT"
-}
-.
-{
-  "iss": "exogram.ai",
-  "sub": "user_or_agent_identity",
-  "target_tool": "stripe_refund_api",
-  "payload_hash": "a4d3f6b9c2a89f1d...",
-  "state_hash": "b8f1e40a2c9d8e7b...",
-  "exp": 1713028302
-}
-```
+### 6.2 Context Poisoning
+Traditional vector retrieval doesn't distinguish between authoritative records and stale or adversarial content. Malicious prompt injections and outdated assertions retain high cosine similarity. The protocol prevents this by scoping retrieval to verified, namespace-isolated entity subgraphs with explicit provenance.
 
-### 7.2 Deterministic Recovery Mechanics
-If state changes during model generation ($\Delta t_{state} \neq 0$) or proposed parameters violate active user constraints, execution is blocked without side effects, eliminating TOCTOU race conditions.
+### 6.3 TOCTOU Races
+Between the time the model evaluates a situation and the time it acts on that evaluation, the world can change. The protocol eliminates this by binding execution tokens to state hashes. If the hash doesn't match at execution time, the action is blocked.
 
 ---
 
-## 8. Recursive Loop & Token Exhaustion Suppression
+## 7. Recursive Loop Suppression
 
-To protect against runaway agentic loops and API cost spikes, the Authority Runtime tracks execution frequencies per session ledger $L[A_{id}]$:
+The Authority Runtime tracks execution frequency per session:
 
 $$
 \forall P \in \mathcal{T}, \quad \text{If } \text{Count}(P_{hash} \mid L[A_{id}]) \ge \text{Threshold} \implies \mathbf{Emit}(\text{HTTP } 429)
 $$
 
+This prevents runaway agentic loops from exhausting API budgets or generating cascading mutations.
+
 ---
 
-## 9. The Agentic Kill Switch Architecture
+## 8. Kill Switch
 
-Administrators and users retain absolute control over AI operations through a deterministic kill switch:
+Users retain absolute control:
 
 $$
 \text{If } GlobalState = \text{LOCKED} \implies \forall P \in \mathcal{T}, \quad \mathbf{Execute}(P) = \mathbf{False}
 $$
 
+When activated, all pending and future actions are blocked globally. No exceptions, no overrides.
+
+---
+
+## 9. Benchmarks
+
+The reference implementation achieves:
+
+- **137 RPS** sustained throughput per node
+- **< 0.07ms** policy evaluation latency
+- **14** protocol invariants enforced at the execution boundary
+- **Zero** LLM inference calls in the safety-critical path
+- **Per-request audit telemetry** recorded to immutable ledger
+
 ---
 
 ## 10. Conclusion
 
-The future of Large Language Models depends on bridging probabilistic intelligence with deterministic truth. By placing the Exogram Authority Runtime beneath frontier models, AI gains persistent memory that reflects reality, provides transparent evidence for every answer, and executes actions safely under governed human control.
+The reasoning capability of language models improves with every generation. Their ability to remember what happened yesterday, prove why they said what they said, and avoid doing something destructive when given agency does not.
+
+The Exogram Protocol provides the substrate that makes those capabilities possible: durable memory that connects facts across time, evidence attribution that makes answers verifiable, and deterministic safety gates that make autonomous action trustworthy.
+
+The protocol is open. The specification is public. The reference implementation is [exogram.ai](https://exogram.ai).
 
 **End of RFC 0001**

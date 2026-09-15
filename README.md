@@ -1,158 +1,110 @@
-# Exogram: Verifiable Reality & Memory Protocol for Large Language Models
+# Exogram Protocol
 
-**Mission:** AI that remembers reality. Durable, user-controlled context and deterministic execution authority for frontier models and autonomous agents.
+**An open specification for persistent memory, grounded answers, and safe execution in Large Language Models.**
 
-[![Status: Active Specification](https://img.shields.io/badge/Status-Active_Specification-blue.svg)](#) [![Category: Authority Runtime](https://img.shields.io/badge/Category-Authority_Runtime-green.svg)](#) [![Standard: Exogram Protocol v1](https://img.shields.io/badge/Standard-Exogram_Protocol_v1-purple.svg)](#)
-
-Exogram is an open protocol and reference runtime designed to anchor Large Language Models in persistent reality. It provides the immutable memory ledger, topological entity graph, epistemic sentence grounding, and deterministic execution boundaries required to make AI genuinely reliable across long-horizon work.
-
-**Strategic Stance:** Exogram does not replace model intelligence. Frontier models (Claude, GPT, Gemini, Llama) are generative reasoning engines. Exogram enforces continuity, evidence attribution, and cryptographic truth beneath them.
+[![Status: Active](https://img.shields.io/badge/Status-Active_Specification-blue.svg)](#) [![Category: LLM Memory Protocol](https://img.shields.io/badge/Category-LLM_Memory_Protocol-green.svg)](#) [![Standard: Exogram Protocol v1](https://img.shields.io/badge/Standard-Exogram_Protocol_v1-purple.svg)](#)
 
 ---
 
-## 1. The Core Problem: Why LLMs Need Reality
+## The Problem
 
-> **The reasoning capability of frontier models improves constantly. Their ability to remember reality across time does not.**
+You ask an AI a question. It gives you an answer. But it doesn't tell you where the answer came from. It doesn't remember what you told it yesterday. And if you give it the ability to take actions on your behalf, nothing stops it from doing something catastrophically wrong based on a confident guess.
 
-Frontier models excel within a single conversation window. But when applied to continuous work, software development, or enterprise operations, they suffer from fundamental architectural failures:
+Every major LLM has this problem. The models keep getting smarter inside a single conversation. But they don't accumulate knowledge about you across conversations. They don't connect the dots between what they know. They don't cite primary sources. And when they act, they act without guardrails.
 
-1. **Ephemeral Amnesia**: Every session starts blank or relies on traditional similarity search (RAG) that dumps disconnected text fragments into the prompt. This introduces high latency, heavy token tax, and semantic drift.
-2. **Hallucinated Continuity**: Without temporal ground truth, models confuse project versions, hallucinate past agreements, and suffer from "Lost in the Middle" degradation.
-3. **Unverifiable Reasoning**: Models present answers with uniform confidence, unable to prove which primary sources or verified facts justified their claims.
-4. **Ungoverned Execution**: When granted agentic tool capabilities (APIs, databases, file writes), models execute probabilistic guesses against production endpoints without deterministic safety bounds.
+Exogram is a protocol designed to fix these gaps. Not by replacing the model, but by putting a memory layer, a grounding layer, and an execution safety layer beneath it.
 
 ---
 
-## 2. The Four-Layer Architecture for LLM Reality & Autonomy
+## What the Protocol Does
 
-Exogram provides a continuous memory, grounding, and verification substrate designed to sit beneath any Large Language Model.
+Exogram sits between the user and the language model. Every query passes through four layers before a response is generated:
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│ Layer I: The Reasoning Engine (LLM Inference & Proposal)    │
-│ Probabilistic model generates reasoning, text, or tool calls│
-└──────────────────────────────┬──────────────────────────────┘
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│ Layer II: The Cognitive Filter (Temporal Entity Graph)       │
-│ Bounded context assembly via 2-hop BFS on immutable ledger  │
-└──────────────────────────────┬──────────────────────────────┘
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│ Layer III: The Authority Runtime (Governed Autonomy Gate)   │
-│ Sub-0.07ms deterministic invariant check (ALLOW / DENY)     │
-└──────────────────────────────┬──────────────────────────────┘
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│ Layer IV: The Proof (Cryptographic State & Audit Chain)     │
-│ Chained SHA-256 state hashes, immutable event ledger        │
-└─────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────┐
+│  Layer 1: Model Inference                                  │
+│  The LLM reasons and generates a response.                 │
+└────────────────────────────┬──────────────────────────────┘
+                             ▼
+┌───────────────────────────────────────────────────────────┐
+│  Layer 2: Memory & Entity Graph                            │
+│  Pulls verified facts and relationships from a personal    │
+│  knowledge graph instead of relying on raw vector search.  │
+└────────────────────────────┬──────────────────────────────┘
+                             ▼
+┌───────────────────────────────────────────────────────────┐
+│  Layer 3: Authority Runtime                                │
+│  Checks proposed actions against safety rules before       │
+│  anything executes. No LLM involved in the safety check.   │
+└────────────────────────────┬──────────────────────────────┘
+                             ▼
+┌───────────────────────────────────────────────────────────┐
+│  Layer 4: Audit Trail                                      │
+│  Cryptographic hash chain records what was known, what     │
+│  was decided, and what evidence justified it.              │
+└───────────────────────────────────────────────────────────┘
 ```
 
-### Layer I: The Reasoning Engine (LLM Inference)
-Your chosen frontier model reasons, synthesizes, and proposes responses or tool mutations. The model focuses purely on synthesis; it is relieved of the burden of holding all ungrounded historical state in its raw context window.
+### Layer 1: Model Inference
+The language model does what it does best. It reads, reasons, and generates text. Exogram doesn't constrain the model's intelligence. It constrains what the model is allowed to *do* with that intelligence.
 
-### Layer II: The Cognitive Filter (Persistent Knowledge Graph & Epistemic Grounding)
-Every fact learned across conversations and uploaded documents is stored as a signed, timestamped entry in an encrypted SQLite WAL ledger and topological entity graph.
-- **Topological 2-Hop BFS**: Replaces unbounded cosine vector retrieval with bounded graph traversal, eliminating "Lost in the Middle" syndrome and context poisoning.
-- **Epistemic Sentence Grounding**: Response claims are linked directly to underlying ledger entries with interactive citation inspection and confidence attribution.
+### Layer 2: Memory & Entity Graph
+This is the core differentiator. Instead of dumping loosely related text chunks into the prompt via traditional RAG, Exogram maintains a timestamped, encrypted ledger of verified facts and a topological entity graph connecting people, projects, decisions, events, and documents.
 
-*(Explore the Live Interactive Knowledge Graph Substrate at [exogram.ai/rfc/0001](https://exogram.ai/rfc/0001))*
+When you ask a question, the system traverses this graph to assemble bounded, relevant context. Your wife's birthday. Your deployment history. The last time a project failed integration tests and why. This context arrives pre-assembled so you never have to write a 300-word prompt just to get a useful answer.
 
-### Layer III: The Authority Runtime (Governed Autonomy)
-Before any tool call, code mutation, or API request executes, Exogram evaluates the request against compile-time policy rules, blocking destructive operations in sub-0.07ms without invoking another probabilistic LLM-as-a-judge.
+Every claim in the response can be traced back to a specific ledger entry. The system calls this *epistemic sentence grounding*: individual statements in the model's output are linked to the evidence that supports them.
 
-### Layer IV: The Proof (Cryptographic State & Audit Chain)
-Every response state and execution decision is cryptographically hashed and chained. Users, developers, and compliance auditors receive tamper-evident proof of the exact context state that justified the model's output.
+### Layer 3: Authority Runtime (Governed Autonomy)
+When the model proposes an action (an API call, a database write, a file mutation), that action passes through a deterministic policy gate before it executes. The gate evaluates safety rules using code, not another LLM call. If the action violates a policy, it's blocked.
 
----
+This matters because schema validators only check data structure, not intent. A syntactically valid `DROP TABLE` request passes JSON validation. The Authority Runtime catches it because it evaluates what the action *means*, not just whether it's well-formed.
 
-## 3. Product & Ecosystem Integration
-
-Exogram operationalizes this protocol across consumer, developer, and agentic workflows:
-
-- **Exogram.ai LLM Workspace**: A minimal, visually calm AI environment (like Claude, Gemini, or Perplexity) featuring split-pane canvas editing, top source shelves, interactive citation popovers, and neural memory inspection.
-- **FastMCP Distribution**: Universal Model Context Protocol server support (`npx exogram` or Python FastMCP) enabling Claude Desktop, Cursor, ChatGPT, and custom agents to natively read and write to Exogram's reality substrate.
-- **Local Ledger Substrate**: Zero-cloud deployment mode via local SQLite WAL with PBKDF2/Fernet encryption at rest.
+### Layer 4: Audit Trail
+Every response, every action decision, every context snapshot generates a SHA-256 hash chained to the previous state. This creates a tamper-evident record of what the model knew at the time it answered. Useful for compliance. Useful for debugging. Useful for the user who wants to understand *why* the AI said what it said.
 
 ---
 
-## 4. Technical Schemas (RFC-0001 Specification)
+## The Reference Implementation
 
-### Action Authorization Request
-When an LLM attempts to execute an action, the payload is evaluated by the Exogram Authority Runtime before hitting physical infrastructure:
+Exogram.ai is the reference implementation of this protocol:
 
-```json
-{
-  "execution_request": {
-    "agent_id": "agt_8f72c91a",
-    "target_system": "aws_production_db",
-    "action": "DROP_TABLE",
-    "context_hash": "a1b2c3d4e5f67890abcdef...",
-    "action_authorization": {
-      "policy_verdict": "DENIED",
-      "latency_ms": 0.054,
-      "rule_violated": "SEC_RULE_04: NO_DESTRUCTIVE_MUTATIONS_ON_PROD_CLUSTER",
-      "action_permitted": false
-    }
-  }
-}
-```
+- **AI Workspace**: A conversational interface with persistent memory, source citations, inline evidence inspection, and a live knowledge graph you can explore.
+- **FastMCP Server**: Universal Model Context Protocol distribution. Connect Claude Desktop, Cursor, ChatGPT, or your own agents to Exogram's memory substrate via `npx exogram` or Python FastMCP.
+- **Local-First Option**: Deploy the memory ledger locally on SQLite WAL with PBKDF2/Fernet encryption. No cloud dependency required.
 
-### Verified Performance Benchmarks
-
-- **137 RPS** sustained throughput per node
-- **0.07ms** deterministic enforcement latency
-- **14** protocol invariants enforced
-- **8** deterministic policy gates — zero probabilistic LLM inference in the critical execution path
-- **Per-request audit telemetry**: `compute_latency_ms`, `agent_id`, `state_hash`, `verdict` recorded in SQLite WAL ledger
-- **Fail-closed invariant**: Default deny under network degradation, timeouts, or policy conflicts
+Try it at [exogram.ai](https://exogram.ai). Read the interactive specification at [exogram.ai/rfc/0001](https://exogram.ai/rfc/0001).
 
 ---
 
-## 5. Why This Matters Now
+## RFCs
 
-Frontier models are converging in baseline reasoning capability. The enduring differentiator for intelligent software is not the underlying model weight—it is the persistent operational infrastructure beneath the model.
-
-Exogram bridges this gap: ensuring AI remembers what matters, understands what changed, and provides verifiable proof behind every answer and action.
-
----
-
-## 6. Open Requests for Comment (RFCs)
-
-We design in public. The Exogram protocol standards are documented in the open RFC series:
-
-| RFC | Title | Status | Link |
-|:---|:---|:---|:---|
-| **RFC 0001** | Verifiable Reality & Execution Authority Protocol for Large Language Models | **Active Specification** | [0001-exogram-execution-authority.md](0001-exogram-execution-authority.md) |
-| **RFC-01** | The Persistent Context Schema (EXO-STATE) | **Draft** | [rfcs/rfc-01-persistent-context-schema.md](rfcs/rfc-01-persistent-context-schema.md) |
-| **RFC-02** | Target Validation Gateway | **Draft** | [rfcs/rfc-02-target-validation-gateway.md](rfcs/rfc-02-target-validation-gateway.md) |
-| **RFC-03** | The Auditable Ledger Format | **Draft** | [rfcs/rfc-03-auditable-ledger-format.md](rfcs/rfc-03-auditable-ledger-format.md) |
+| RFC | Title | Status |
+|:---|:---|:---|
+| **0001** | [Persistent Memory, Epistemic Grounding & Execution Authority](0001-exogram-execution-authority.md) | Active |
+| **01** | [Persistent Context Schema (EXO-STATE)](rfcs/rfc-01-persistent-context-schema.md) | Draft |
+| **02** | [Target Validation Gateway](rfcs/rfc-02-target-validation-gateway.md) | Draft |
+| **03** | [Auditable Ledger Format](rfcs/rfc-03-auditable-ledger-format.md) | Draft |
 
 ---
 
-## Reference Implementation & Resources
+## Resources
 
-- **Website**: [exogram.ai](https://exogram.ai) — AI that remembers reality
-- **Web RFC-0001 Spec**: [exogram.ai/rfc/0001](https://exogram.ai/rfc/0001) — Interactive visual specification
-- **Protocol Overview**: [exogram.ai/protocol](https://exogram.ai/protocol) — Visual architecture walkthrough
-- **Product Overview**: [exogram.ai/product](https://exogram.ai/product) — Persistent context & memory features
-- **How It Works**: [exogram.ai/how-it-works](https://exogram.ai/how-it-works) — The 6-step cognitive loop
-- **Developers**: [exogram.ai/developers](https://exogram.ai/developers) — SDKs, APIs, and quickstart guides
-- **Trust Center**: [exogram.ai/trust-center](https://exogram.ai/trust-center) — Security architecture & compliance matrix
+- [exogram.ai](https://exogram.ai)
+- [exogram.ai/rfc/0001](https://exogram.ai/rfc/0001) — Interactive visual spec
+- [exogram.ai/how-it-works](https://exogram.ai/how-it-works) — Product walkthrough
+- [exogram.ai/developers](https://exogram.ai/developers) — SDKs and API reference
 
 ---
 
 ## Contributing
 
-We welcome architectural review, schema feedback, and RFC contributions from the AI community:
-
-- **Architectural Discussion** → [Open a GitHub Issue](https://github.com/Richard-Ewing/exogram-protocol-rfc/issues)
-- **Schema Corrections** → [Submit a Pull Request](https://github.com/Richard-Ewing/exogram-protocol-rfc/pulls)
-- **Security Vulnerabilities** → See [SECURITY.md](SECURITY.md)
+- [Open an issue](https://github.com/Richard-Ewing/exogram-protocol-rfc/issues) for architectural discussion
+- [Submit a PR](https://github.com/Richard-Ewing/exogram-protocol-rfc/pulls) for schema corrections
+- Security vulnerabilities → [SECURITY.md](SECURITY.md)
 
 ---
 
 <p align="center">
-  <sub>The protocol is open. The standard is vendor-neutral. The reference runtime is <a href="https://exogram.ai">Exogram.ai</a>.</sub>
+  <sub>The protocol is open. The standard is vendor-neutral. The reference implementation is <a href="https://exogram.ai">Exogram.ai</a>.</sub>
 </p>
