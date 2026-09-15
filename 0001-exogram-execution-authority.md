@@ -167,26 +167,26 @@ Upon intent validation, the EA Node MUST generate a SHA-256 hash representative 
 }
 ```
 
-### 6. Execution Authority Implementation Requirements
+### 7.2 Execution Authority Implementation Requirements
 
-### 6.1 State Verification
+#### 7.2.1 State Verification
 The EA proxy MUST retrieve the identical context hash from the environment memory before execution.
 
-### 6.2 Semantic Mapping (Knowledge Graph)
+#### 7.2.2 Semantic Mapping (Knowledge Graph)
 To effectively validate context hash drift, the EA MUST construct and maintain a Cognitive Filter Knowledge Graph using the following strict schema:
 
 - **Semantic Entities**:
   - `entity_type: agent | concept | organization | event | default`
-  - Rendered with high-contrast glowing vectors corresponding to identity groups (e.g. Cyan = Core Runtime, Green = Grounded Concepts).
+  - Rendered with high-contrast vectors corresponding to identity groups (e.g. Cyan = Core Runtime, Green = Grounded Concepts).
 - **Inferred Relationships**:
   - `source_entity_id -> target_entity_id`
-  - Rendered with `linkCurvature: 0.25` indicating directional dependencies.
+  - Rendered with directional dependencies.
   - Hover states MUST present inline semantic reasoning.
 
 The UI representing this mapping acts as the visual proof of cryptographic verification, assuring administrators that the EA's intent matrices match the environment state perfectly.
 
-### 6.3 Blocking Execution
-If $\Delta t_{state} \neq 0$ (state has changed) or $I_{proposed} \not\subset \Gamma$ (intent breaches guardrails), the EA MUST intercept the request and return:, mathematically eliminating Time-Of-Check to Time-Of-Use vulnerabilities.
+#### 7.2.3 Blocking Execution
+If $\Delta t_{state} \neq 0$ (state has changed) or $I_{proposed} \not\subset \Gamma$ (intent breaches guardrails), the EA MUST intercept the request and return `HTTP 403 Forbidden` with diagnostic error traces, mathematically eliminating Time-Of-Check to Time-Of-Use (TOCTOU) vulnerabilities.
 
 ---
 
