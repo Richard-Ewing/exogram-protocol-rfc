@@ -1,4 +1,4 @@
-# RFC 0001: Persistent Memory, Epistemic Grounding & Execution Authority for Large Language Models
+# RFC 0001: Persistent Memory, Epistemic Grounding & Action Authorization for Large Language Models
 
 **Network Working Group**  
 **Request for Comments:** 0001  
@@ -29,7 +29,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 - **Ledger Entry:** A timestamped, encrypted fact stored in the user's personal vault. Contains a canonical claim, topic, source provenance, confidence score, and hash.
 - **Entity Graph:** A topological knowledge graph connecting people, organizations, projects, documents, events, and concepts extracted from ledger entries.
 - **Epistemic Grounding:** The process of linking individual sentences in a model response to the specific ledger entries and sources that justify them.
-- **Authority Runtime:** The deterministic execution gate that evaluates proposed tool actions against policy rules using code (not LLM inference).
+- **Action Authorization Gate:** The deterministic execution gate that evaluates proposed tool actions against policy rules using code (not LLM inference).
 - **Execution Token ($C_{tok}$):** A cryptographic JWT binding a validated action payload to a specific state hash. Expires after a defined TTL.
 - **State Hash ($\mathcal{H}$):** SHA-256 hash of the current context state at evaluation time, used to detect drift before execution.
 
@@ -65,7 +65,7 @@ When a user asks "Can we deploy the authentication update today?", the system do
 
 **Epistemic sentence grounding:** After the model generates a response, individual claims are linked back to the ledger entries and sources that support them. The user sees inline citations they can inspect: which fact, when it was recorded, what its confidence score is, and where it came from.
 
-### 3.3 Layer 3: Authority Runtime (Governed Autonomy)
+### 3.3 Layer 3: Action Authorization & Verified Boundaries
 
 When the model proposes an action (API call, database mutation, file write, code execution), the request passes through a deterministic policy gate before reaching the target system.
 
@@ -79,7 +79,7 @@ Where $\Gamma(P)$ is the set of constraints the action must satisfy and $C_{boun
 
 Two properties matter here:
 
-1. **No LLM in the safety path.** The gate is deterministic code. It evaluates boolean conditions, not probabilities. A schema validator checks data structure. The Authority Runtime checks intent against policy.
+1. **No LLM in the safety path.** The gate is deterministic code. It evaluates boolean conditions, not probabilities. A schema validator checks data structure. The Action Authorization Gate checks intent against policy.
 2. **State hash binding.** The execution token is bound to the SHA-256 hash of the context state at evaluation time. If the underlying state changes between evaluation and execution (a TOCTOU race condition), the token is invalidated and the action is blocked.
 
 If the action is denied, the user receives a structured diagnostic explaining which policy was violated and why.
@@ -110,7 +110,7 @@ sequenceDiagram
     participant User as User
     participant Memory as Layer 2 (Memory Graph)
     participant LLM as Layer 1 (Model)
-    participant Gate as Layer 3 (Authority Runtime)
+    participant Gate as Layer 3 (Action Authorization Gate)
     participant Target as External System
     participant Ledger as Layer 4 (Audit Trail)
 
@@ -144,7 +144,7 @@ A traditional LLM asks five clarifying questions before producing anything usefu
 When the model states "The latest integration test failed after the middleware change," the user can click the inline citation and see: Ledger Entry #4f12, recorded September 14th, confidence 98%, source: CI pipeline webhook. The claim isn't just plausible. It's traceable.
 
 **Safe execution:**
-An autonomous agent proposes `DROP TABLE production_users`. The Authority Runtime evaluates this against policy rule SEC_RULE_04 (no destructive mutations on production clusters), denies execution, and returns a structured diagnostic. The denial happens in under 0.1ms, without invoking another model.
+An autonomous agent proposes `DROP TABLE production_users`. The Action Authorization Gate evaluates this against policy rule SEC_RULE_04 (no destructive mutations on production clusters), denies execution, and returns a structured diagnostic. The denial happens in under 0.1ms, without invoking another model.
 
 ---
 
@@ -163,7 +163,7 @@ Between the time the model evaluates a situation and the time it acts on that ev
 
 ## 7. Recursive Loop Suppression
 
-The Authority Runtime tracks execution frequency per session:
+The Action Authorization Gate tracks execution frequency per session:
 
 $$
 \forall P \in \mathcal{T}, \quad \text{If } \text{Count}(P_{hash} \mid L[A_{id}]) \ge \text{Threshold} \implies \mathbf{Emit}(\text{HTTP } 429)
@@ -173,7 +173,7 @@ This prevents runaway agentic loops from exhausting API budgets or generating ca
 
 ---
 
-## 8. Kill Switch
+## 8. Emergency Action Lock (Kill Switch)
 
 Users retain absolute control:
 

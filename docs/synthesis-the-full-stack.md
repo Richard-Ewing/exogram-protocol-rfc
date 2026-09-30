@@ -1,65 +1,85 @@
-# Synthesis: The Intelligent Execution Stack
+# Synthesis: The 4-Layer Personal AI Architecture
 
-When all four layers of the Generative AI processing stack are aligned vertically, they create **The Intelligent Execution Stack**, a framework capable of completely unsupervised autonomy without massive enterprise liability risks.
-
-## The Global System State Mathematics
-The goal of safe autonomy is to prove that the global mutation vector does not violate enterprise bounds. We represent the global execution logic as the union of all inference ($\Psi_{total}$):
-
-$$
-\Psi_{total} = \left( \sum_{i} \mathcal{L}_{1\_Inf} \right) \cup \left( \sum_{j} V_{2\_Mem} \right) \cup \left( \sum_{k} O_{3\_Route} \right)
-$$
-
-Because Layer 1, Layer 2, and Layer 3 are entirely probabilistic, the value of $\Psi_{total}$ is an unknown probability distribution. The Exogram Protocol (Layer 4) forces the distribution vector through an absolute Boolean constraint validation filter $\mathcal{G}_{EA}$:
-
-$$
-\text{Authorized\_State} = \Psi_{total} \times \mathcal{G}_{EA} = \{ 0, 1 \}
-$$
-
-By funneling the infinite distribution into a binary $0$ (Blocked) or $1$ (Authorized), the system achieves absolute infrastructure safety.
-
-## The Architectural Synthesis Model
-
-```mermaid
-graph TD
-    subgraph Layer 1: Intelligence
-        LLM[Anthropic Claude / OpenAI o1<br>Stochastic Engine]
-    end
-    
-    subgraph Layer 2: Memory
-        VectorDB[(Pinecone / State Graph<br>State Retrieval)]
-    end
-    
-    subgraph Layer 3: Orchestration
-        Orchest(LangChain Finite State Machine<br>Routing Loops)
-    end
-    
-    subgraph Layer 4: Execution Authority
-        EA{Exogram Protocol<br>Deterministic Guardrails}
-    end
-    
-    subgraph Target Data Systems
-        Postgres[(PostgreSQL)]
-        Stripe[Stripe API]
-    end
-
-    LLM <--> Orchest
-    Orchest <--> VectorDB
-    Orchest -->|Proposed Tool Payload| EA
-    EA -->|Validated $C_{tok}$ HTTP Post| Postgres
-    EA -.->|HTTP 409 Rejected| Orchest
-    EA -->|Validated $C_{tok}$ HTTP Post| Stripe
-    
-    style EA fill:#1A1A2E,stroke:#10B981,stroke-width:4px,color:#fff
-```
-
-By decoupling the probabilistic layers (1, 2, 3) from the Target Data Systems, the **Exogram Protocol** safely gates the deterministic layer. Enterprises can build massive Swarm orchestration loops without fear of a single hallucinated prompt-injection deleting their production databases.
+When all four layers of the Exogram processing stack are vertically integrated, they form a cohesive architecture that eliminates AI amnesia and enables reliable real-world execution.
 
 ---
 
-## Related Resources
+## The System State Synthesis
 
-- **[Exogram Architecture — Deep Technical Dive](https://exogram.ai/architecture)** — Interactive exploration of the full governance stack.
-- **[Architecture Whitepaper (PDF)](https://exogram.ai/architecture-whitepaper)** — The official technical thesis.
-- **[How It Works](https://exogram.ai/how-it-works)** — Step-by-step walkthrough of the verification pipeline.
-- **[Protocol Specification (EAAP)](https://exogram.ai/protocol)** — The open standard for execution authority.
-- **[Proving Ground — Live Demo](https://exogram.ai/proving-ground)** — Test the full stack in your browser.
+The goal of governed personal AI is to ensure that generative, probabilistic models can think and synthesize freely, while state retention and real-world actions remain deterministic, grounded, and bounded.
+
+We define total inference generation as the composition of model reasoning ($\mathcal{L}_{1}$), connector tool definitions ($\mathcal{C}_{2}$), and persistent memory graph retrieval ($\mathcal{M}_{3}$):
+
+$$
+\Psi_{total} = \mathcal{L}_{1} \circ \mathcal{C}_{2} \circ \mathcal{M}_{3}
+$$
+
+Because model reasoning is stochastic, $\Psi_{total}$ produces probabilistic hypotheses. The Exogram Protocol introduces the deterministic invariant evaluation function $\mathcal{G}_{eval}$ at Layer 4:
+
+$$
+\mathbf{State}_{committed} = \mathcal{G}_{eval}(\Psi_{total}) \in \{ \text{AUTHORIZED}, \text{BLOCKED} \}
+$$
+
+By passing proposed actions through this deterministic gate, the user's systems of record are insulated from model errors, hallucinations, and prompt injections.
+
+---
+
+## Architectural Synthesis Model
+
+```mermaid
+graph TD
+    subgraph Layer 1: Intelligence Models
+        LLM[Frontier Models: Claude 3.7 / GPT-4.5 / Gemini 2.5<br>Local SLMs: Phi-4 / Gemma 2]
+    end
+    
+    subgraph Layer 2: Orchestration & Connectors
+        Connectors[Model Context Protocol MCP<br>Google Drive / Gmail / Desktop Tools]
+    end
+    
+    subgraph Layer 3: Memory Vault & Living Knowledge Graph
+        Vault[(Encrypted SQLite WAL Ledger<br>2-Hop Neural Entity Graph<br>6h Dream Cycle Consolidation)]
+    end
+    
+    subgraph Layer 4: Systems of Record & Action Boundaries
+        Gate{Exogram Invariant Gate<br>0.07ms Policy Validation}
+    end
+    
+    subgraph Systems of Record
+        DB[(PostgreSQL / SQLite)]
+        API[External APIs / Payment Gateways]
+        Files[Local Filesystem / Cloud Storage]
+    end
+
+    LLM <--> Connectors
+    Connectors <--> Vault
+    Connectors -->|Proposed Tool Action| Gate
+    Gate -->|Authorized + State Hash Token| DB
+    Gate -->|Authorized + State Hash Token| API
+    Gate -->|Authorized + State Hash Token| Files
+    Gate -.->|Blocked: Policy Invariant Violation| Connectors
+    
+    style Gate fill:#0f172a,stroke:#10b981,stroke-width:3px,color:#fff
+    style Vault fill:#f8fafc,stroke:#6366f1,stroke-width:2px,color:#0f172a
+```
+
+---
+
+## Decoupled Responsibilities
+
+| Layer | Component | Core Responsibility | Failure Mode Prevented |
+| :--- | :--- | :--- | :--- |
+| **Layer 1** | **Intelligence Models** | Reasoning, comprehension, synthesis, and creative planning. | Rigid, un-adaptive rule matching. |
+| **Layer 2** | **Orchestration & Connectors** | Tool routing, UI interaction, standard MCP integrations. | Proprietary vendor lock-in. |
+| **Layer 3** | **Memory Vault & Knowledge Graph** | Persistent fact recording, 2-hop graph reasoning, Dream Cycles. | Session amnesia & context drift. |
+| **Layer 4** | **Systems of Record & Action Boundaries** | 0.07ms invariant gating, state hash binding, audit logging. | Runaway execution & data corruption. |
+
+By separating probabilistic cognition from deterministic consequence, users can leverage the full intelligence of frontier models without risking unauthorized state changes or suffering from conversation amnesia.
+
+---
+
+## Related Documentation
+
+- [RFC 0001: The Core Protocol Specification](../0001-exogram-execution-authority.md)
+- [Layer 2: Memory Vaults & The Cognitive Filter](cognitive-filter.md)
+- [Layer 4: Systems of Record & Verified Action Boundaries](layer-4-execution-authority.md)
+- [Developer Tooling: Python SDK & MCP Guide](developer-agent-tooling.md)

@@ -1,107 +1,121 @@
 # Exogram Protocol
 
-**An open specification for persistent memory, grounded answers, and safe execution in Large Language Models.**
+**An open specification for persistent memory, living knowledge graphs, and verifiable action boundaries in Large Language Models.**
 
-[![Status: Active](https://img.shields.io/badge/Status-Active_Specification-blue.svg)](#) [![Category: LLM Memory Protocol](https://img.shields.io/badge/Category-LLM_Memory_Protocol-green.svg)](#) [![Standard: Exogram Protocol v1](https://img.shields.io/badge/Standard-Exogram_Protocol_v1-purple.svg)](#)
-
----
-
-## The Problem
-
-You ask an AI a question. It gives you an answer. But it doesn't tell you where the answer came from. It doesn't remember what you told it yesterday. And if you give it the ability to take actions on your behalf, nothing stops it from doing something catastrophically wrong based on a confident guess.
-
-Every major LLM has this problem. The models keep getting smarter inside a single conversation. But they don't accumulate knowledge about you across conversations. They don't connect the dots between what they know. They don't cite primary sources. And when they act, they act without guardrails.
-
-Exogram is a protocol designed to fix these gaps. Not by replacing the model, but by putting a memory layer, a grounding layer, and an execution safety layer beneath it.
+[![Status: Active](https://img.shields.io/badge/Status-Active_Specification-emerald.svg)](#) [![Category: LLM Memory Protocol](https://img.shields.io/badge/Category-LLM_Memory_Protocol-blue.svg)](#) [![Standard: Exogram Protocol v1](https://img.shields.io/badge/Standard-Exogram_Protocol_v1-purple.svg)](#) [![Website](https://img.shields.io/badge/Website-exogram.ai-indigo.svg)](https://exogram.ai)
 
 ---
 
-## What the Protocol Does
+## 1. The Problem: AI Amnesia & Unbounded Action
 
-Exogram sits between the user and the language model. Every query passes through four layers before a response is generated:
+You ask an AI assistant a question. It gives you a plausible answer. But it doesn't remember what you discussed yesterday. It doesn't know your preferences, your projects, or your team. And when granted the ability to call tools or interact with APIs, nothing prevents it from taking destructive actions based on a confident guess.
+
+Every major language model suffers from two core flaws:
+1. **Total Session Amnesia:** Frontier models become smarter inside a single conversation, but they wake up blank in the next. Context windows compress, truncate, and drop critical details. You waste hours re-prompting your background, tone, and constraints.
+2. **Unverified Action Execution:** When models are connected to tools (databases, email, financial APIs), they evaluate textual plausibility rather than external ground truth. A single hallucination or indirect prompt injection can trigger irreversible real-world damage.
+
+**The Exogram Protocol solves both problems.** Not by replacing the model, but by establishing a four-layer architecture beneath it: **persistent memory**, **living knowledge graphs**, and **verifiable action boundaries**.
+
+---
+
+## 2. The 4-Layer Personal AI Architecture
+
+The Exogram Protocol structures modern AI applications into four explicit, decoupled layers:
 
 ```
-┌───────────────────────────────────────────────────────────┐
-│  Layer 1: Model Inference                                  │
-│  The LLM reasons and generates a response.                 │
-└────────────────────────────┬──────────────────────────────┘
-                             ▼
-┌───────────────────────────────────────────────────────────┐
-│  Layer 2: Memory & Entity Graph                            │
-│  Pulls verified facts and relationships from a personal    │
-│  knowledge graph instead of relying on raw vector search.  │
-└────────────────────────────┬──────────────────────────────┘
-                             ▼
-┌───────────────────────────────────────────────────────────┐
-│  Layer 3: Authority Runtime                                │
-│  Checks proposed actions against safety rules before       │
-│  anything executes. No LLM involved in the safety check.   │
-└────────────────────────────┬──────────────────────────────┘
-                             ▼
-┌───────────────────────────────────────────────────────────┐
-│  Layer 4: Audit Trail                                      │
-│  Cryptographic hash chain records what was known, what     │
-│  was decided, and what evidence justified it.              │
-└───────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│ LAYER 1: INTELLIGENCE MODELS                                │
+│ Claude 3.7 Sonnet · GPT-4.5 · Gemini 2.5 Flash · Local SLMs │
+│ (Probabilistic reasoning, text generation, and planning)    │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ Structured Intent & Synthesis
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│ LAYER 2: ORCHESTRATION & CONNECTORS                         │
+│ Model Context Protocol (MCP) · Google Drive · Gmail · Tools │
+│ (Standard tool routing, execution pipelines, user interface)│
+└──────────────────────────────┬──────────────────────────────┘
+                               │ Verified Retrieval & State
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│ LAYER 3: MEMORY VAULT & LIVING KNOWLEDGE GRAPH              │
+│ Encrypted Fact Ledger · 2-Hop Graph Traversal · Dream Cycle │
+│ (Deduplicated, cryptographically sealed, persistent context)│
+└──────────────────────────────┬──────────────────────────────┘
+                               │ 0.07ms Policy Invariants
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│ LAYER 4: SYSTEMS OF RECORD & VERIFIED ACTION BOUNDARIES     │
+│ Databases · Payment APIs · Filesystems · User Hardware      │
+│ (State hash verification, action authorization, audit trail)│
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### Layer 1: Model Inference
-The language model does what it does best. It reads, reasons, and generates text. Exogram doesn't constrain the model's intelligence. It constrains what the model is allowed to *do* with that intelligence.
+### Layer 1: Intelligence Models
+The language model does what it does best: language comprehension, creative reasoning, synthesis, and planning. The protocol is completely vendor-agnostic and supports cloud frontier models (Claude, OpenAI, Gemini) and local SLMs (Phi-4, Gemma 2, Llama 3) with seamless provider failover.
 
-### Layer 2: Memory & Entity Graph
-This is the core differentiator. Instead of dumping loosely related text chunks into the prompt via traditional RAG, Exogram maintains a timestamped, encrypted ledger of verified facts and a topological entity graph connecting people, projects, decisions, events, and documents.
+### Layer 2: Orchestration & Connectors
+Connectors bridge the AI to real work. The reference implementation standardizes on the **Model Context Protocol (MCP)**, allowing desktop clients (Claude Desktop, Cursor, Windsurf) and custom workflows to interact with user tools, files, and communications under explicit permission boundaries.
 
-When you ask a question, the system traverses this graph to assemble bounded, relevant context. Your wife's birthday. Your deployment history. The last time a project failed integration tests and why. This context arrives pre-assembled so you never have to write a 300-word prompt just to get a useful answer.
+### Layer 3: Memory Vault & Living Knowledge Graph
+Instead of dumping loosely related text chunks into the prompt via traditional vector search, Exogram maintains:
+- **An Encrypted Fact Ledger:** SQLite WAL with AES-256 / Fernet encryption where every entry is a timestamped, deduplicated fact with decaying confidence unless reinforced.
+- **A Topological Knowledge Graph:** Automatically wires extracted people, organizations, projects, and events into a 2-hop entity graph.
+- **Epistemic Sentence Grounding:** Statements in the model's response are cited and linked to verified source evidence.
+- **Autonomous Dream Cycles:** Background maintenance sweeps every 6 hours deduplicate entities, prune decayed associations, and reinforce verified relationships.
 
-Every claim in the response can be traced back to a specific ledger entry. The system calls this *epistemic sentence grounding*: individual statements in the model's output are linked to the evidence that supports them.
-
-### Layer 3: Authority Runtime (Governed Autonomy)
-When the model proposes an action (an API call, a database write, a file mutation), that action passes through a deterministic policy gate before it executes. The gate evaluates safety rules using code, not another LLM call. If the action violates a policy, it's blocked.
-
-This matters because schema validators only check data structure, not intent. A syntactically valid `DROP TABLE` request passes JSON validation. The Authority Runtime catches it because it evaluates what the action *means*, not just whether it's well-formed.
-
-### Layer 4: Audit Trail
-Every response, every action decision, every context snapshot generates a SHA-256 hash chained to the previous state. This creates a tamper-evident record of what the model knew at the time it answered. Useful for compliance. Useful for debugging. Useful for the user who wants to understand *why* the AI said what it said.
-
----
-
-## The Reference Implementation
-
-Exogram.ai is the reference implementation of this protocol:
-
-- **AI Workspace**: A conversational interface with persistent memory, source citations, inline evidence inspection, and a live knowledge graph you can explore.
-- **FastMCP Server**: Universal Model Context Protocol distribution. Connect Claude Desktop, Cursor, ChatGPT, or your own agents to Exogram's memory substrate via `npx exogram` or Python FastMCP.
-- **Local-First Option**: Deploy the memory ledger locally on SQLite WAL with PBKDF2/Fernet encryption. No cloud dependency required.
-
-Try it at [exogram.ai](https://exogram.ai). Read the interactive specification at [exogram.ai/rfc/0001](https://exogram.ai/rfc/0001).
+### Layer 4: Systems of Record & Verified Action Boundaries
+When an AI proposes a state-changing action (database write, API transfer, file mutation), the request passes through a deterministic policy gate before touching production systems:
+- **0.07ms CPU Latency:** Rules are evaluated in compiled code, not another slow LLM call.
+- **State Hash Binding ($\mathcal{H}$):** Execution tokens are bound to a SHA-256 state hash at evaluation time. If underlying data shifts before execution, the token is invalidated to prevent race conditions.
+- **Immutable Audit Trail:** Every decision, evaluation, and mutation produces a tamper-evident audit record.
 
 ---
 
-## RFCs
+## 3. The Reference Implementation
 
-| RFC | Title | Status |
-|:---|:---|:---|
-| **0001** | [Persistent Memory, Epistemic Grounding & Execution Authority](0001-exogram-execution-authority.md) | Active |
-| **01** | [Persistent Context Schema (EXO-STATE)](rfcs/rfc-01-persistent-context-schema.md) | Draft |
-| **02** | [Target Validation Gateway](rfcs/rfc-02-target-validation-gateway.md) | Draft |
-| **03** | [Auditable Ledger Format](rfcs/rfc-03-auditable-ledger-format.md) | Draft |
+[Exogram.ai](https://exogram.ai) is the official reference implementation of this protocol:
 
----
+- **AI Workspace (`/chat`):** A consumer and team conversational interface with zero amnesia, inline source citations, and an interactive 2-hop knowledge graph.
+- **Model Context Protocol (MCP) Server:** Universal distribution for Claude Desktop and Cursor via `npx mcp-server-exogram` or Python FastMCP.
+- **Local-First SQLite Vault:** Run 100% private, on-device memory ledgers with local models.
 
-## Resources
-
-- [exogram.ai](https://exogram.ai)
-- [exogram.ai/rfc/0001](https://exogram.ai/rfc/0001) — Interactive visual spec
-- [exogram.ai/how-it-works](https://exogram.ai/how-it-works) — Product walkthrough
-- [exogram.ai/developers](https://exogram.ai/developers) — SDKs and API reference
+Explore the reference implementation at **[exogram.ai](https://exogram.ai)**.
 
 ---
 
-## Contributing
+## 4. Specification Documents
 
-- [Open an issue](https://github.com/Richard-Ewing/exogram-protocol-rfc/issues) for architectural discussion
-- [Submit a PR](https://github.com/Richard-Ewing/exogram-protocol-rfc/pulls) for schema corrections
-- Security vulnerabilities → [SECURITY.md](SECURITY.md)
+| Document | Title | Status |
+| :--- | :--- | :--- |
+| **[RFC 0001](0001-exogram-execution-authority.md)** | Persistent Memory, Epistemic Grounding & Action Authorization | Active Standard |
+| **[Layer 1 Guide](docs/layer-1-intelligence.md)** | Intelligence Models & Model Agnosticism | Informational |
+| **[Layer 2 Guide](docs/cognitive-filter.md)** | Memory Vaults, Knowledge Graphs & The Cognitive Filter | Informational |
+| **[Layer 3 Guide](docs/layer-3-orchestration.md)** | Orchestration, Connectors & Model Context Protocol | Informational |
+| **[Layer 4 Guide](docs/layer-4-execution-authority.md)** | Systems of Record & Verified Action Boundaries | Informational |
+| **[Developer Tooling](docs/developer-agent-tooling.md)** | Python SDK, CLI & MCP Integration Patterns | Developer Guide |
+| **[Full Stack Synthesis](docs/synthesis-the-full-stack.md)** | The Complete 4-Layer Personal AI Architecture | Architecture |
+
+---
+
+## 5. Quick Reference & Core Invariants
+
+The protocol enforces 6 foundational invariants:
+
+1. **The Provenance Law:** No fact is authoritative without verifiable source attribution.
+2. **The Epistemic Grounding Law:** An inference cannot masquerade as an established truth.
+3. **The Zero-Amnesia Law:** Core user preferences and entity relationships persist across sessions.
+4. **The State Integrity Law:** Actions require state hash parity between evaluation and commit.
+5. **The Deterministic Gate Law:** Tool actions are validated by compiled code, not probabilistic LLM calls.
+6. **The User Sovereignty Law:** Users retain total cryptographic ownership, one-click export, and GDPR hard deletion rights.
+
+---
+
+## 6. Contributing & Community
+
+- **Discussions:** [GitHub Discussions](https://github.com/Richard-Ewing/exogram-protocol-rfc/discussions)
+- **Issues & Schema Updates:** [GitHub Issues](https://github.com/Richard-Ewing/exogram-protocol-rfc/issues)
+- **Security Disclosures:** [SECURITY.md](SECURITY.md)
 
 ---
 
