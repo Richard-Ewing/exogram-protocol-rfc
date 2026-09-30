@@ -79,7 +79,7 @@ By separating probabilistic cognition from deterministic consequence, users can 
 
 ## Related Documentation
 
-- [RFC 0001: The Core Protocol Specification](../0001-exogram-execution-authority.md)
+- [RFC 0001: The Core Protocol Specification](../0001-exogram-protocol-specification.md)
 - [Layer 2: Memory Vaults & The Cognitive Filter](cognitive-filter.md)
-- [Layer 4: Systems of Record & Verified Action Boundaries](layer-4-execution-authority.md)
+- [Layer 4: Systems of Record & Verified Action Boundaries](layer-4-action-boundaries.md)
 - [Developer Tooling: Python SDK & MCP Guide](developer-agent-tooling.md)

@@ -133,6 +133,6 @@ All data is stored in a local SQLite file with Write-Ahead Logging (WAL) enabled
 
 ## Related Documentation
 
-- [RFC 0001: The Core Protocol Specification](../0001-exogram-execution-authority.md)
-- [Layer 4: Systems of Record & Verified Action Boundaries](layer-4-execution-authority.md)
+- [RFC 0001: The Core Protocol Specification](../0001-exogram-protocol-specification.md)
+- [Layer 4: Systems of Record & Verified Action Boundaries](layer-4-action-boundaries.md)
 - [Synthesis: The Complete 4-Layer Personal AI Stack](synthesis-the-full-stack.md)

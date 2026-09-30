@@ -88,11 +88,11 @@ Explore the reference implementation at **[exogram.ai](https://exogram.ai)**.
 
 | Document | Title | Status |
 | :--- | :--- | :--- |
-| **[RFC 0001](0001-exogram-execution-authority.md)** | Persistent Memory, Epistemic Grounding & Action Authorization | Active Standard |
+| **[RFC 0001](0001-exogram-protocol-specification.md)** | Persistent Memory, Epistemic Grounding & Action Authorization | Active Standard |
 | **[Layer 1 Guide](docs/layer-1-intelligence.md)** | Intelligence Models & Model Agnosticism | Informational |
 | **[Layer 2 Guide](docs/cognitive-filter.md)** | Memory Vaults, Knowledge Graphs & The Cognitive Filter | Informational |
 | **[Layer 3 Guide](docs/layer-3-orchestration.md)** | Orchestration, Connectors & Model Context Protocol | Informational |
-| **[Layer 4 Guide](docs/layer-4-execution-authority.md)** | Systems of Record & Verified Action Boundaries | Informational |
+| **[Layer 4 Guide](docs/layer-4-action-boundaries.md)** | Systems of Record & Verified Action Boundaries | Informational |
 | **[Developer Tooling](docs/developer-agent-tooling.md)** | Python SDK, CLI & MCP Integration Patterns | Developer Guide |
 | **[Full Stack Synthesis](docs/synthesis-the-full-stack.md)** | The Complete 4-Layer Personal AI Architecture | Architecture |
 

@@ -96,6 +96,6 @@ sequenceDiagram
 
 ## Related Specifications
 
-- [RFC 0001: Persistent Memory, Epistemic Grounding & Action Authorization](../0001-exogram-execution-authority.md)
+- [RFC 0001: Persistent Memory, Epistemic Grounding & Action Authorization](../0001-exogram-protocol-specification.md)
 - [Layer 2: Memory Vaults & The Cognitive Filter](cognitive-filter.md)
 - [Synthesis: The Complete 4-Layer Personal AI Stack](synthesis-the-full-stack.md)
