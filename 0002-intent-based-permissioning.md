@@ -8,6 +8,11 @@
 
 ---
 
+> ### ⚡ The 2-Second Summary
+> Giving an AI permanent admin keys to your tools or databases is dangerous because models can hallucinate. **Intent-Based Permissioning** evaluates what an AI is *actually trying to do* in 0.07ms, granting single-use, sub-second permission only if the action matches verified user intent.
+
+---
+
 ## 1. Abstract
 
 Identity and Access Management (IAM) and Role-Based Access Control (RBAC) are foundational to strict human-centric enterprise security. However, when applied to autonomous AI Agents, these legacy standards result in systemic failure. This document defines **Intent-Based Permissioning (IBP)**, the security standard utilized by the Exogram Protocol to restrict AI operations dynamically based on the algorithmic intent of the request rather than the static identity of the requester.

@@ -4,6 +4,11 @@
 
 [![Status: Active](https://img.shields.io/badge/Status-Active_Specification-emerald.svg)](#) [![Category: LLM Memory Protocol](https://img.shields.io/badge/Category-LLM_Memory_Protocol-blue.svg)](#) [![Standard: Exogram Protocol v1](https://img.shields.io/badge/Standard-Exogram_Protocol_v1-purple.svg)](#) [![Website](https://img.shields.io/badge/Website-exogram.ai-indigo.svg)](https://exogram.ai)
 
+> ### ⚡ The 2-Second Summary
+> **Every major AI assistant (ChatGPT, Claude) forgets who you are the second you start a new conversation.**
+> 
+> The **Exogram Protocol** defines an open standard for giving any AI a **private memory vault**, a **living knowledge graph**, and **safe action boundaries**—so your AI remembers your life, your work, and your preferences across sessions without taking dangerous actions against your tools.
+
 ---
 
 ## 1. The Problem: AI Amnesia & Unbounded Action
@@ -90,10 +95,11 @@ Explore the reference implementation at **[exogram.ai](https://exogram.ai)**.
 | :--- | :--- | :--- |
 | **[RFC 0001](0001-exogram-protocol-specification.md)** | Persistent Memory, Epistemic Grounding & Action Authorization | Active Standard |
 | **[Layer 1 Guide](docs/layer-1-intelligence.md)** | Intelligence Models & Model Agnosticism | Informational |
-| **[Layer 2 Guide](docs/cognitive-filter.md)** | Memory Vaults, Knowledge Graphs & The Cognitive Filter | Informational |
-| **[Layer 3 Guide](docs/layer-3-orchestration.md)** | Orchestration, Connectors & Model Context Protocol | Informational |
+| **[Layer 2 Guide](docs/layer-2-orchestration-connectors.md)** | Orchestration, Connectors & Model Context Protocol | Informational |
+| **[Layer 3 Guide](docs/layer-3-memory-vault-graph.md)** | Memory Vaults, Knowledge Graphs & The Cognitive Filter | Informational |
 | **[Layer 4 Guide](docs/layer-4-action-boundaries.md)** | Systems of Record & Verified Action Boundaries | Informational |
 | **[Developer Tooling](docs/developer-agent-tooling.md)** | Python SDK, CLI & MCP Integration Patterns | Developer Guide |
+| **[Platform Architecture](docs/enterprise-ai-companies.md)** | Modern Platform & Developer Integration Patterns | Architecture |
 | **[Full Stack Synthesis](docs/synthesis-the-full-stack.md)** | The Complete 4-Layer Personal AI Architecture | Architecture |
 
 ---

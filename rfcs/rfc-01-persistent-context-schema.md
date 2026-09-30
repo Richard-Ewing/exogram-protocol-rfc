@@ -7,6 +7,11 @@
 
 ---
 
+> ### ⚡ The 2-Second Summary
+> Your personal context is trapped in vendor silos. **EXO-STATE** is a portable, model-agnostic JSON schema that lets your identity, goals, and verified preferences travel with you between OpenAI, Claude, Gemini, or local models.
+
+---
+
 ## Abstract
 
 This RFC proposes a universal JSON schema for human-to-agent context that can be injected into any orchestration layer, regardless of whether the model is OpenAI, Anthropic, or an open-source local model.

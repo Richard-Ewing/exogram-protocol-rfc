@@ -1,5 +1,10 @@
 # Layer 4: Systems of Record & Verified Action Boundaries
 
+> ### ⚡ The 2-Second Summary
+> Language models should never hold direct write access to your database or bank account. **Layer 4** acts as a sub-millisecond safety gate that tests proposed actions against strict policy rules in compiled code before anything is committed.
+
+---
+
 ## Abstract
 For an AI system to move beyond passive conversation and perform real work, it must enact side-effects in systems of record: writing database rows, updating CRM tickets, sending messages, or invoking financial APIs. Layers 1 through 3 parse reasoning, manage connectors, and retrieve persistent memory, but probabilistic models cannot safely hold direct write authority.
 

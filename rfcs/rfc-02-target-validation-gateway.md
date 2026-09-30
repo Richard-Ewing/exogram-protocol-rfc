@@ -7,6 +7,11 @@
 
 ---
 
+> ### ⚡ The 2-Second Summary
+> Evaluating AI actions using other slow, probabilistic LLMs is too unreliable and expensive. The **Target Validation Gateway** uses fast, compiled Boolean code rules to approve or block proposed actions in under 1ms.
+
+---
+
 ## Abstract
 
 This RFC proposes an execution gateway that processes go/no-go decisions at sub-runtime latencies, enabling autonomous AI agents to be safely deployed in production environments.

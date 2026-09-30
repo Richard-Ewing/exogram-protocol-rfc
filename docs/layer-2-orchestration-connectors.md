@@ -1,4 +1,9 @@
-# Layer 3: Orchestration (Routing & Cyclic Loops)
+# Layer 2: Orchestration & Connectors
+
+> ### ⚡ The 2-Second Summary
+> Language models cannot safely interact with external tools without clear boundaries. **Layer 2** standardizes tool routing via the open Model Context Protocol (MCP), connecting your AI to files, email, and databases under user-defined permissions.
+
+---
 
 ## Abstract
 Because LLMs cannot natively run Python or JavaScript on their own servers, the **Orchestration Layer** was developed to construct the actual agentic wrappers. This layer passes the text context to the Intelligence layer, receives the JSON string output, maps it to a local function tool, executes it, and sends the result back to the LLM.

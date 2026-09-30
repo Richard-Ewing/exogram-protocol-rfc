@@ -7,6 +7,11 @@
 
 ---
 
+> ### ⚡ The 2-Second Summary
+> Standard AI chat logs only record prompts and text answers. The **Auditable Ledger Format** records cryptographic hashes, policy decisions, and state snapshots for every tool action—providing a tamper-evident record of *why* an action was taken and who authorized it.
+
+---
+
 ## Abstract
 
 This RFC proposes a verifiable, append-only standard for logging AI execution history — transforming passive AI memory into enterprise-grade accountability infrastructure.

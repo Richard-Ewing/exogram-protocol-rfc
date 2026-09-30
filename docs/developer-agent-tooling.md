@@ -1,6 +1,7 @@
 # Developer Tooling & Integrations (SDK / MCP / REST)
 
-Exogram provides open standards and reference implementations for integrating persistent memory vaults and verified action boundaries directly into developer applications and AI workflows.
+> ### ⚡ The 2-Second Summary
+> Add persistent memory and safe execution to any AI application in 3 lines of code. Use the official **Python SDK (`pip install exogram`)**, connect to Claude Desktop or Cursor via **Model Context Protocol (MCP)**, or integrate directly via the REST API.
 
 ---
 

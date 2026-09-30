@@ -8,6 +8,11 @@
 
 ---
 
+> ### ⚡ The 2-Second Summary
+> The **Exogram Protocol** eliminates AI amnesia. It defines an open standard for giving frontier AI models an **encrypted memory vault**, an **interactive knowledge graph**, and **fast 0.07ms safety gates**—so your AI remembers who you are, cites real evidence for every answer, and never runs dangerous commands against your files or databases.
+
+---
+
 ## 1. Abstract
 
 This specification defines the Exogram Protocol: an open standard for attaching persistent memory, evidence-based grounding, and deterministic execution safety to Large Language Models.

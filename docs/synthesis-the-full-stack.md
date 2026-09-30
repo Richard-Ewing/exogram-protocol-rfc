@@ -1,6 +1,7 @@
 # Synthesis: The 4-Layer Personal AI Architecture
 
-When all four layers of the Exogram processing stack are vertically integrated, they form a cohesive architecture that eliminates AI amnesia and enables reliable real-world execution.
+> ### ⚡ The 2-Second Summary
+> Exogram unites 4 explicit layers: frontier intelligence models (Layer 1), standard MCP connectors (Layer 2), an encrypted memory vault and knowledge graph (Layer 3), and 0.07ms verified action boundaries (Layer 4). You get an AI that remembers you without the risk of runaway actions.
 
 ---
 
@@ -80,6 +81,6 @@ By separating probabilistic cognition from deterministic consequence, users bene
 ## Related Documentation
 
 - [RFC 0001: The Core Protocol Specification](../0001-exogram-protocol-specification.md)
-- [Layer 2: Memory Vaults & The Cognitive Filter](cognitive-filter.md)
+- [Layer 3: Memory Vaults & The Cognitive Filter](layer-3-memory-vault-graph.md)
 - [Layer 4: Systems of Record & Verified Action Boundaries](layer-4-action-boundaries.md)
 - [Developer Tooling: Python SDK & MCP Guide](developer-agent-tooling.md)

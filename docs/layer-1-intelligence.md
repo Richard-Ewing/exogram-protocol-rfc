@@ -1,4 +1,9 @@
-# Layer 1: Intelligence (Stochastic Generation)
+# Layer 1: Intelligence Models
+
+> ### ⚡ The 2-Second Summary
+> Language models are reasoning engines, but they guess the next word based on probabilities. **Layer 1** decouples raw intelligence from execution, allowing models to think, plan, and synthesize without holding direct write privileges to user systems.
+
+---
 
 ## Abstract
 The foundation of the modern Generative AI stack is the **Intelligence Layer**. This layer consists of the massive neural networks—Large Language Models (LLMs)—trained on exabytes of human cognition. While they are phenomenal reasoning engines, they are fundamentally **probabilistic** and mathematically incapable of enforcing deterministic security logic.

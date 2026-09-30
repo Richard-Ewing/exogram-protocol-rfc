@@ -8,6 +8,11 @@
 
 ---
 
+> ### ⚡ The 2-Second Summary
+> While an AI takes 10 seconds to think, your database might change in the background. **Cryptographic Execution Tokens ($C_{tok}$)** bind approved actions to a specific snapshot of your data, preventing the AI from executing actions on outdated information.
+
+---
+
 ## 1. Abstract
 
 Upon successful verification of payload invariants (per RFC 0001), the Exogram Action Authorization Gate must transmit authorization across an untrusted network. This document establishes the strict byte-structure, hashing algorithms, and Time-To-Live (TTL) boundaries for the **Cryptographic Execution Token** ($C_{tok}$). 

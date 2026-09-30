@@ -1,4 +1,9 @@
-# Layer 2: The Cognitive Filter (State Pre-Filtering)
+# Layer 3: The Cognitive Filter (Memory Vault & Knowledge Graph)
+
+> ### ⚡ The 2-Second Summary
+> Traditional vector search dumps loosely related text into AI prompts, causing hallucinations and context confusion. The **Cognitive Filter** uses an encrypted 2-hop knowledge graph to retrieve only verified, directly connected memories before the model answers.
+
+---
 
 ## Abstract
 Traditional AI models suffer from the "Lost in the Middle" syndrome when presented with massive context windows. Rather than feeding raw, unbounded probabilistic data directly to a reasoning engine, Exogram introduces the **Cognitive Filter** architecture. This layer serves as an authoritative pre-filter, ensuring the model only receives mathematically verified, highly relevant state context.
