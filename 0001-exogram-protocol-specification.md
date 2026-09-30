@@ -173,7 +173,7 @@ This prevents runaway agentic loops from exhausting API budgets or generating ca
 
 ---
 
-## 8. Emergency Action Lock (Kill Switch)
+## 8. Emergency Action Lock
 
 Users retain absolute control:
 
