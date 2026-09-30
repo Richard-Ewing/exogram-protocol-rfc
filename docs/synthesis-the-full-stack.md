@@ -73,7 +73,7 @@ graph TD
 | **Layer 3** | **Memory Vault & Knowledge Graph** | Persistent fact recording, 2-hop graph reasoning, Dream Cycles. | Session amnesia & context drift. |
 | **Layer 4** | **Systems of Record & Action Boundaries** | 0.07ms invariant gating, state hash binding, audit logging. | Runaway execution & data corruption. |
 
-By separating probabilistic cognition from deterministic consequence, users can leverage the full intelligence of frontier models without risking unauthorized state changes or suffering from conversation amnesia.
+By separating probabilistic cognition from deterministic consequence, users benefit from the full intelligence of frontier models without risking unauthorized state changes or suffering from conversation amnesia.
 
 ---
 
