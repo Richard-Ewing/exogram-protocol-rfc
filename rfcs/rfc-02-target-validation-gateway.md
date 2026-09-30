@@ -17,12 +17,12 @@ Establish a Target Validation gateway that evaluates whether an agent's proposed
 
 ## Core Challenge
 
-If the admissibility check takes too long, autonomous loops break down. Probabilistic LLM-as-a-judge approaches are too slow and unreliable. This RFC proposes moving governance checks to deterministic policy engines (fast, binary rules) to safely gate API and tool calls natively.
+If the verification check takes too long, autonomous loops break down. Probabilistic LLM-as-a-judge approaches are too slow and unreliable. This RFC proposes moving governance checks to deterministic policy engines (fast, binary rules) to safely gate API and tool calls natively.
 
 ## Design Principles
 
 1. **Deterministic** — The gateway must produce the same result given the same inputs. Zero randomness in enforcement.
-2. **Sub-millisecond** — Admissibility evaluation must complete in under 1ms to avoid breaking autonomous execution loops.
+2. **Sub-millisecond** — Policy evaluation must complete in under 1ms to avoid breaking autonomous execution loops.
 3. **Fail-closed** — If the gateway cannot evaluate, the action is denied. Never default to allow.
 4. **Zero Model Inference** — The judgment engine uses server-side code logic gates, not LLM inference. No probabilistic evaluation.
 5. **Cryptographic Verification** — Each approved action generates a SHA-256 state hash and execution token.

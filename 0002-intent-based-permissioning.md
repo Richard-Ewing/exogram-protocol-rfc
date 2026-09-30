@@ -40,19 +40,19 @@ sequenceDiagram
 
 ## 3. Intent-Based Permissioning (IBP) Architecture
 
-Intent-Based Permissioning flips the authentication framework. Instead of asking **"Who is making this request?"**, the Exogram EA Layer asks, **"What is the physical mathematical effect of this request on the target state?"**
+Intent-Based Permissioning flips the authentication framework. Instead of asking **"Who is making this request?"**, the Exogram Action Authorization Gate asks, **"What is the physical mathematical effect of this request on the target state?"**
 
 Permissions are NOT statically assigned to the Agent. They are ephemerally generated for the specific *payload*.
 
 ### 3.1 The IBP Evaluation Matrix
 
-When a payload $P$ is intercepted, the EA node constructs an Intent Graph $\Gamma_{intent}$. The protocol requires measuring the proposed operation against the bounded constraint sub-graph $C_{bounded}$.
+When a payload $P$ is intercepted, the Action Gate constructs an Intent Graph $\Gamma_{intent}$. The protocol requires measuring the proposed operation against the bounded constraint sub-graph $C_{bounded}$.
 
 $$
 Auth(P) \iff \forall \text{node } n \in \Gamma_{intent}(P), \exists \text{ path } \Phi \text{ in } C_{bounded} \ \text{validating } n
 $$
 
-If, and only if, the semantic result of the payload aligns exclusively with the bounded rules of the context, the EA Node mints a millisecond-duration cryptographic token authorizing ONLY that specific transaction.
+If, and only if, the semantic result of the payload aligns exclusively with the bounded rules of the context, the Action Gate mints a millisecond-duration cryptographic token authorizing ONLY that specific transaction.
 
 ---
 
@@ -66,7 +66,7 @@ stateDiagram-v2
     
     [*] --> Intercept_Payload : Agent Emits Action
     
-    state "Exogram Intent Verification Node" as EA {
+    state "Exogram Action Gate" as Gate {
         Intercept_Payload --> Parse_Geometry
         Parse_Geometry --> Compare_Boundaries : Extract $\Gamma(P)$
         

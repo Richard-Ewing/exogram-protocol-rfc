@@ -10,7 +10,7 @@
 
 ## 1. Abstract
 
-Upon successful verification of payload admissibility (per RFC 0001), the Exogram Execution Authority must transmit authorization across an untrusted network. This document establishes the strict byte-structure, hashing algorithms, and Time-To-Live (TTL) boundaries for the **Cryptographic Execution Token** ($C_{tok}$). 
+Upon successful verification of payload invariants (per RFC 0001), the Exogram Action Authorization Gate must transmit authorization across an untrusted network. This document establishes the strict byte-structure, hashing algorithms, and Time-To-Live (TTL) boundaries for the **Cryptographic Execution Token** ($C_{tok}$). 
 
 This token architecture specifically mitigates TOCTOU (Time-Of-Check to Time-Of-Use) state desynchronization events inherent to variable-duration stochastic agent inference.
 
@@ -59,9 +59,9 @@ The Exogram protocol solves this mathematically using the `state_hash` embedded 
 
 ```mermaid
 sequenceDiagram
-    participant Agent as LangChain Agent
+    participant Agent as Agent Client
     participant DB as Target Database
-    participant EA as Exogram Authority
+    participant Gate as Action Authorization Gate
     
     Note over Agent,DB: Inference Starts (time=T0)
     Agent->>DB: Read State (User Balance = $100)
@@ -71,10 +71,10 @@ sequenceDiagram
     Note over DB: Exogenous User Action (time=T5)
     DB->>DB: User withdraws $50 (Balance = $50)
     
-    Note over Agent,EA: Inference Completes (time=T10)
-    Agent->>EA: Submit Payload: Transfer $100
-    EA->>EA: Validates Intent against T0 Context
-    EA-->>Agent: Mints C_TOK (state_hash = Hash($100))
+    Note over Agent,Gate: Inference Completes (time=T10)
+    Agent->>Gate: Submit Payload: Transfer $100
+    Gate->>Gate: Validates Invariants against T0 Context
+    Gate-->>Agent: Mints C_TOK (state_hash = Hash($100))
     
     Agent->>DB: Executes HTTP Transfer with C_TOK
     DB->>DB: Check Live State Hash vs C_TOK state_hash
@@ -90,7 +90,7 @@ By enforcing that the downstream target node mathematically calculates its *live
 
 Because an Execution Token is only valid for a specific subset of state and memory dynamics, granting long-term validity exposes the network to replay attacks.
 
-The Exogram EA Layer MUST enforce ultra-narrow TTL lifetimes based on the physical transport latency required to reach the target API.
+The Exogram Action Authorization Gate MUST enforce ultra-narrow TTL lifetimes based on the physical transport latency required to reach the target API.
 
 Let $\delta_{network}$ represent average internal cluster ping times (e.g., $5\text{ms}$).
 Let $\tau_{buffer}$ represent standard computational overhead (e.g., $1000\text{ms}$).
