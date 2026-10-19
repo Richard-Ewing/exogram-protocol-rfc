@@ -1,86 +1,107 @@
-# RFC-01: The Persistent Context Schema (EXO-STATE)
+# RFC-01: The Persistent Context & 3-Horizon Episodic Schema (`EXO-STATE` v5)
 
-**Status:** Draft  
+**Status:** Active Standard (Master Plan v5)  
 **Author:** Richard Ewing  
-**Created:** 2026-05-27  
-**Standard:** Exogram Protocol v1
+**Updated:** October 2026  
+**Standard:** Exogram Protocol v5
 
 ---
 
 > ### ⚡ The 2-Second Summary
-> Your personal context is trapped in vendor silos. **EXO-STATE** is a portable, model-agnostic JSON schema that lets your identity, goals, and verified preferences travel with you between OpenAI, Claude, Gemini, or local models.
+> Your personal context should never be trapped inside a single AI vendor's silo or flattened into undated text snippets. **`EXO-STATE` v5** defines a portable JSON schema for **Infinite-Hop Personal Neural Network** nodes, **3-Horizon Episodic Memory TTLs** (`ephemeral_episode`, `recurring_event`, `durable_trait`), **Read-Time Scalar Conflict Supersession**, and **`Household` vs. `Work`** scope boundaries.
 
 ---
 
-## Abstract
+## 1. Abstract
 
-This RFC proposes a universal JSON schema for human-to-agent context that can be injected into any orchestration layer, regardless of whether the model is OpenAI, Anthropic, or an open-source local model.
+This RFC defines the canonical `EXO-STATE` v5 JSON payload used by the Exogram Runtime, Python/TypeScript SDK (`exogram-sdk`), and FastMCP Server (`mcp-server-exogram`) to transport verified personal context across sessions and models.
 
-## Goal
+## 2. Design Principles
 
-Define a standardized, portable context schema (EXO-STATE) that enables persistent identity, goals, constraints, and operational state to travel with the user across completely different models and platforms.
+1. **3-Sphere Partitioning (`Work · People · Life`):** Every entity and claim belongs to an explicit sphere with mega-topic caps so professional ventures never flood personal turns.
+2. **3-Horizon Temporal Validity:** Every memory claim is typed as `ephemeral_episode` (36-hour `valid_until` TTL), `recurring_event` (`RRULE:FREQ=YEARLY`), or `durable_trait`.
+3. **Read-Time Scalar Conflict Supersession:** Single-valued scalar slots (`home_location`, `property_acreage`, `grade_level`, `dietary_restriction`) carry explicit `supersedes_claim_id` pointers so the newest verified fact always wins.
+4. **Subtask Data Policy Enforcement:** Explicitly marks `PERSONAL` vs. `PUBLIC_ONLY` fields so `stripVaultAndPiiFromPublicSubtask` can scrub private claims in `<1ms`.
+5. **Reversible State Hashing:** Every snapshot is sealed with a SHA-256 `state_hash` and `undo_cursor_id` linked to `/api/memory/undo`.
 
-## Core Challenge
+---
 
-Normalizing context injection so it consumes the minimal amount of tokens while maintaining 100% operational fidelity across environments.
-
-Today, operational context is trapped inside vendor silos. Every new tool or agent requires the user to repeatedly reconstruct their identity, goals, constraints, workflows, and operational boundaries. The user is forced to adapt themselves to the AI system because the systems are fundamentally incapable of adapting to persistent human context.
-
-## Design Principles
-
-1. **Portability** — The schema must be model-agnostic. It must work identically across OpenAI, Anthropic, Meta, Google, Mistral, and open-source models.
-2. **Token Efficiency** — Context injection must consume the minimal number of tokens while preserving full operational fidelity.
-3. **Versioned State** — Each context snapshot must be versioned with a state hash for integrity verification.
-4. **Namespace Isolation** — User context must be strictly isolated. No cross-contamination between users or agents.
-5. **Temporal Decay** — Facts and constraints must support confidence decay over time unless explicitly reinforced.
-
-## Proposed Schema
+## 3. Canonical `EXO-STATE` v5 Schema
 
 ```json
 {
   "exo_state": {
-    "version": "1.0.0",
-    "state_hash": "sha256:a1b2c3d4...",
-    "namespace": "user_abc123",
-    "identity": {
-      "name": "string",
-      "role": "string",
-      "constraints": ["string"],
-      "goals": ["string"]
+    "version": "5.0.0",
+    "state_hash": "sha256:b8f1e40a2c9d8e7b6a5f4e3d2c1b0a9f...",
+    "user_id": "usr_9f8e7d6c",
+    "laya_preflight_ms": 8.4,
+    "subtask_data_policy": "PERSONAL",
+    "active_sphere": "people",
+    "graph_traversal": {
+      "algorithm": "infinite_hop_spreading_activation_hipporag2_ppr",
+      "decay_factor": 0.72,
+      "hub_damping": "inv_sqrt_degree",
+      "rrf_k": 60
     },
-    "operational_context": {
-      "facts": [
-        {
-          "key": "string",
-          "value": "string",
-          "source": "string",
-          "confidence": 0.95,
-          "created_at": "ISO-8601",
-          "decay_rate": 0.01
-        }
-      ],
-      "active_constraints": ["string"],
-      "permission_boundaries": {
-        "allowed_actions": ["string"],
-        "denied_actions": ["string"],
-        "escalation_targets": ["string"]
+    "episodic_claims": [
+      {
+        "claim_id": "clm_01J9X8K2",
+        "sphere": "life",
+        "horizon": "durable_trait",
+        "scalar_slot": "property_acreage",
+        "subject": "Home Property",
+        "predicate": "has_acreage",
+        "object": "5 acres",
+        "supersedes_claim_id": "clm_01H4P2M9",
+        "confidence": 0.99,
+        "valid_until": null,
+        "rrule": null,
+        "updated_at": "2026-10-19T18:30:00Z"
+      },
+      {
+        "claim_id": "clm_01J9X8P9",
+        "sphere": "people",
+        "horizon": "recurring_event",
+        "scalar_slot": null,
+        "subject": "Sarah",
+        "predicate": "birthday_date",
+        "object": "October 24",
+        "confidence": 1.0,
+        "valid_until": null,
+        "rrule": "RRULE:FREQ=YEARLY;BYMONTH=10;BYMONTHDAY=24",
+        "updated_at": "2026-10-01T12:00:00Z"
+      },
+      {
+        "claim_id": "clm_01J9X9A1",
+        "sphere": "people",
+        "horizon": "ephemeral_episode",
+        "scalar_slot": null,
+        "subject": "Maya",
+        "predicate": "saturday_schedule",
+        "object": "Soccer tournament at Northside Complex at 2:00 PM",
+        "confidence": 0.96,
+        "valid_until": "2026-10-21T06:30:00Z",
+        "rrule": null,
+        "updated_at": "2026-10-19T18:30:00Z"
       }
+    ],
+    "scope_boundaries": {
+      "a2a_trust_zone": "household",
+      "work_mega_topic_capped": true,
+      "instinct_pre_mutation_gate": "enabled"
     },
-    "audit_trail": {
-      "last_action": "string",
-      "last_evaluation": "ISO-8601",
-      "total_evaluations": 0
+    "undo_registry": {
+      "latest_undo_cursor_id": "undo_01J9X8K2M4P7Q9R3",
+      "undo_endpoint": "/api/memory/undo"
     }
   }
 }
 ```
 
-## Open Questions
-
-- What is the optimal compression format for large context payloads?
-- How should conflicting facts from different sessions be resolved?
-- What is the maximum viable context size before token efficiency degrades?
-
 ---
 
-**Related:** [Exogram Architecture](https://exogram.ai/architecture) · [Protocol Overview](https://exogram.ai/protocol) · [API Reference](https://exogram.ai/docs/api)
+## Related Specifications
+
+- [RFC 0001: Infinite-Hop Personal Neural Network & Instinct Governance](../0001-exogram-protocol-specification.md)
+- [Layer 3: Infinite-Hop Personal Neural Network & 3-Horizon Memory](../docs/layer-3-memory-vault-graph.md)
+- [RFC-03: The Auditable Ledger Format (`turn_traces`)](rfc-03-auditable-ledger-format.md)

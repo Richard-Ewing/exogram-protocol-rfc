@@ -1,86 +1,80 @@
-# Synthesis: The 4-Layer Personal AI Architecture
+# Synthesis: The Complete 4-Layer Master Plan v5 Architecture
 
 > ### ⚡ The 2-Second Summary
-> Exogram unites 4 explicit layers: frontier intelligence models (Layer 1), standard MCP connectors (Layer 2), an encrypted memory vault and knowledge graph (Layer 3), and 0.07ms verified action boundaries (Layer 4). You get an AI that remembers you without the risk of runaway actions.
+> **Exogram Master Plan v5** unites four closed-loop layers: **Laya `<15ms` Preflight & Two-Tier Inference Gateway** (Layer 1), **6 Honest Kernels & 8–12 Semantic Tool Selector** (Layer 2), the **Infinite-Hop Personal Neural Network & 3-Horizon Memory** (Layer 3), and **13 A2UI Composable Living Tiles + `0.07ms` Instinct Governance** (Layer 4).
 
 ---
 
-## The System State Synthesis
+## 1. Mathematical & Systems Synthesis
 
-The goal of governed personal AI is to ensure that generative, probabilistic models can think and synthesize freely, while state retention and real-world actions remain deterministic, grounded, and bounded.
+The Exogram Protocol ensures that foundation models can reason across deep personal context while privacy boundaries, UI provenance, and external actions remain deterministic and reversible.
 
-We define total inference generation as the composition of model reasoning ($\mathcal{L}_{1}$), connector tool definitions ($\mathcal{C}_{2}$), and persistent memory graph retrieval ($\mathcal{M}_{3}$):
-
-$$
-\Psi_{total} = \mathcal{L}_{1} \circ \mathcal{C}_{2} \circ \mathcal{M}_{3}
-$$
-
-Because model reasoning is stochastic, $\Psi_{total}$ produces probabilistic hypotheses. The Exogram Protocol introduces the deterministic invariant evaluation function $\mathcal{G}_{eval}$ at Layer 4:
+For any user turn $q$, total turn synthesis $\Psi_{\text{turn}}(q)$ is the composition of:
+1. **Laya Deterministic Preflight ($\mathcal{L}_{\text{fast}}$):** In-memory entity, sphere, and `SubtaskDataPolicy` (`PERSONAL` vs. `PUBLIC_ONLY`) resolution in `<15ms`.
+2. **Infinite-Hop Associative Graph Retrieval ($\mathcal{G}_{\infty}$):** Spreading activation ($\gamma = 0.72$, $1/\sqrt{\text{deg}}$ hub damping) + HippoRAG 2 Spectral PPR ($D^{-1/2} A D^{-1/2}$) + Read-Time Scalar Conflict Supersession across `Work`, `People`, and `Life`.
+3. **Scoped 6-Kernel & 8–12 Tool Execution ($\mathcal{K}_{6}$):** Parallel execution of the 6 Honest Kernels over at most 12 semantically selected tools wrapped in `provenance.untrusted_content` envelopes.
+4. **A2UI Provenance & Instinct Gate ($\mathcal{V}_{\text{instinct}}$):** Deterministic validation of all 13 Living Tiles (`validateTileSpecProvenance`), post-synthesis citation verification (`verifyAgentContributionsAgainstTurnOutput`), and `<0.07ms` $C_{tok}$ action authorization:
 
 $$
-\mathbf{State}_{committed} = \mathcal{G}_{eval}(\Psi_{total}) \in \{ \text{AUTHORIZED}, \text{BLOCKED} \}
+\mathbf{State}_{\text{committed}} = \mathcal{V}_{\text{instinct}}\!\left( \mathcal{K}_{6} \circ \mathcal{G}_{\infty} \circ \mathcal{L}_{\text{fast}}(q) \right) \in \{ \text{COMMITTED\_WITH\_UNDO}, \text{SENTINEL\_APPROVAL\_REQUIRED}, \text{BLOCKED} \}
 $$
-
-By passing proposed actions through this deterministic gate, the user's systems of record are insulated from model errors, hallucinations, and prompt injections.
 
 ---
 
-## Architectural Synthesis Model
+## 2. Full-Stack Architectural Topology
 
 ```mermaid
 graph TD
-    subgraph Layer 1: Intelligence Models
-        LLM[Frontier Models: Claude 3.7 / GPT-4.5 / Gemini 2.5<br>Local SLMs: Phi-4 / Gemma 2]
+    subgraph Layer 1: Laya <15ms Preflight & Two-Tier Inference Gateway
+        Laya["Laya Deterministic Fast-Path (<15ms)<br/>Entity, Sphere & Subtask Policy Resolver"]
+        PaidLLM["PERSONAL Tier: Paid Gemini 3.8 Flash / 2.5 Pro (ZDR)"]
+        PublicPool["PUBLIC_ONLY Tier: stripVaultAndPiiFromPublicSubtask<br/>+ Multi-Lab Pool"]
+        Laya --> PaidLLM
+        Laya --> PublicPool
     end
     
-    subgraph Layer 2: Orchestration & Connectors
-        Connectors[Model Context Protocol MCP<br>Google Drive / Gmail / Desktop Tools]
+    subgraph Layer 2: 6 Honest Kernels & 8-12 Semantic Tool Selector
+        Kernels["6 Honest Kernels:<br/>Neural Graph · Generative UI · Live Web & Places Scout<br/>Action & Draft · Analytical Synthesis · Grounded Citation"]
+        Tools["5 Core Meta-Tools + 5-7 Semantic FastMCP Tools<br/>Wrapped in provenance.untrusted_content"]
+        Kernels <--> Tools
     end
     
-    subgraph Layer 3: Memory Vault & Living Knowledge Graph
-        Vault[(Encrypted SQLite WAL Ledger<br>2-Hop Neural Entity Graph<br>6h Dream Cycle Consolidation)]
+    subgraph Layer 3: Infinite-Hop Personal Neural Network & 3-Horizon Memory
+        Vault[("SQLite WAL / Supabase + Pinecone<br/>Infinite-Hop Spreading Activation (decay=0.72, 1/√deg)<br/>HippoRAG 2 Spectral PPR (D⁻¹/² A D⁻¹/²)<br/>3-Horizon TTLs (36h · RRULE:FREQ=YEARLY · durable_trait)<br/>Read-Time Scalar Conflict Supersession")]
     end
     
-    subgraph Layer 4: Systems of Record & Action Boundaries
-        Gate{Exogram Invariant Gate<br>0.07ms Policy Validation}
-    end
-    
-    subgraph Systems of Record
-        DB[(PostgreSQL / SQLite)]
-        API[External APIs / Payment Gateways]
-        Files[Local Filesystem / Cloud Storage]
+    subgraph Layer 4: A2UI Living Tiles, Instinct Gate & 0.07ms C_tok Kernel
+        Tiles["13 Schema-Validated A2UI Living Tiles<br/>validateTileSpecProvenance + AG-UI Patching"]
+        Instinct{"Instinct Pre-Mutation Gate (<0.07ms)<br/>+ [Approve Step] / [Take Over] + C_tok"}
+        Undo["Instant Epistemic Undo (/api/memory/undo)<br/>+ 9 Master Plan v5 Tables (turn_traces)"]
     end
 
-    LLM <--> Connectors
-    Connectors <--> Vault
-    Connectors -->|Proposed Tool Action| Gate
-    Gate -->|Authorized + State Hash Token| DB
-    Gate -->|Authorized + State Hash Token| API
-    Gate -->|Authorized + State Hash Token| Files
-    Gate -.->|Blocked: Policy Invariant Violation| Connectors
-    
-    style Gate fill:#0f172a,stroke:#10b981,stroke-width:3px,color:#fff
-    style Vault fill:#f8fafc,stroke:#6366f1,stroke-width:2px,color:#0f172a
+    PaidLLM <--> Kernels
+    PublicPool --> Kernels
+    Kernels <--> Vault
+    Kernels --> Tiles
+    Kernels --> Instinct
+    Instinct -->|"Authorized + C_tok"| Undo
 ```
 
 ---
 
-## Decoupled Responsibilities
+## 3. Decoupled Layer Responsibilities
 
-| Layer | Component | Core Responsibility | Failure Mode Prevented |
+| Layer | Subsystem | Core Responsibility | Failure Mode Eliminated |
 | :--- | :--- | :--- | :--- |
-| **Layer 1** | **Intelligence Models** | Reasoning, comprehension, synthesis, and creative planning. | Rigid, un-adaptive rule matching. |
-| **Layer 2** | **Orchestration & Connectors** | Tool routing, UI interaction, standard MCP integrations. | Proprietary vendor lock-in. |
-| **Layer 3** | **Memory Vault & Knowledge Graph** | Persistent fact recording, 2-hop graph reasoning, Dream Cycles. | Session amnesia & context drift. |
-| **Layer 4** | **Systems of Record & Action Boundaries** | 0.07ms invariant gating, state hash binding, audit logging. | Runaway execution & data corruption. |
-
-By separating probabilistic cognition from deterministic consequence, users benefit from the full intelligence of frontier models without risking unauthorized state changes or suffering from conversation amnesia.
+| **Layer 1** | **Laya `<15ms` & Two-Tier Gateway** | In-memory entity preflight (`<= 1.6s` P50 TTFT) and strict `PERSONAL` vs. `PUBLIC_ONLY` routing. | Slow LLM preflight bottlenecks & private vault leakage to public APIs. |
+| **Layer 2** | **6 Honest Kernels & 8–12 Tools** | Scoped tool discovery (`<= 12` tools), `provenance.untrusted_content` envelopes, and verified kernel citations. | Tool-catalog dilution, unverified agent badges, & indirect prompt injection. |
+| **Layer 3** | **Infinite-Hop Neural Network** | Spreading activation ($\text{decay}=0.72$), Spectral PPR hub damping, 3-Horizon TTLs, and conflict supersession. | Session amnesia, shallow hop cutoffs, hub-node flooding, & stale facts. |
+| **Layer 4** | **A2UI Living Tiles & Instinct Gate** | 13 interactive Living Tiles, `validateTileSpecProvenance`, `[Approve Step]` / `[Take Over]`, $C_{tok}$, and `/api/memory/undo`. | Dead Markdown walls, hallucinated prices/checklists, & ungoverned mutations. |
 
 ---
 
 ## Related Documentation
 
 - [RFC 0001: The Core Protocol Specification](../0001-exogram-protocol-specification.md)
-- [Layer 3: Memory Vaults & The Cognitive Filter](layer-3-memory-vault-graph.md)
-- [Layer 4: Systems of Record & Verified Action Boundaries](layer-4-action-boundaries.md)
-- [Developer Tooling: Python SDK & MCP Guide](developer-agent-tooling.md)
+- [Layer 1: Two-Tier Inference Gateway & Laya Preflight](layer-1-intelligence.md)
+- [Layer 2: 6-Point Agent Contract & 8–12 Semantic Tool Selector](layer-2-orchestration-connectors.md)
+- [Layer 3: Infinite-Hop Personal Neural Network & 3-Horizon Memory](layer-3-memory-vault-graph.md)
+- [Layer 4: A2UI Living Tiles & Instinct Action Boundaries](layer-4-action-boundaries.md)
+- [Developer Tooling: Official Python SDK & FastMCP Guide](developer-agent-tooling.md)

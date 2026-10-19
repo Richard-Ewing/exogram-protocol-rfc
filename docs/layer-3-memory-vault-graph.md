@@ -1,70 +1,78 @@
-# Layer 3: The Cognitive Filter (Memory Vault & Knowledge Graph)
+# Layer 3: Infinite-Hop Personal Neural Network & 3-Horizon Episodic Memory
 
 > ### ⚡ The 2-Second Summary
-> Traditional vector search dumps loosely related text into AI prompts, causing hallucinations and context confusion. The **Cognitive Filter** uses an encrypted 2-hop knowledge graph to retrieve only verified, directly connected memories before the model answers.
+> Real human context doesn't stop at 1 or 2 hops. **Layer 3** powers your **Personal Neural Network (`Work · People · Life`)** using **Infinite-Hop Associative Spreading Activation** ($\text{decay}=0.72$, $1/\sqrt{\text{deg}}$ hub damping), **HippoRAG 2 Spectral Personalized PageRank**, **3-Horizon Episodic Memory TTLs**, and **Read-Time Scalar Conflict Supersession**.
 
 ---
 
-## Abstract
-Traditional AI models suffer from the "Lost in the Middle" syndrome when presented with massive context windows. Rather than feeding raw, unbounded probabilistic data directly to a reasoning engine, Exogram introduces the **Cognitive Filter** architecture. This layer serves as an authoritative pre-filter, ensuring the model only receives mathematically verified, highly relevant state context.
+## 1. Abstract
 
-## Components
-- **Knowledge Graph:** SQL-backed structured entity and relationship mapping.
-- **Vector Search:** Pinecone for semantic embeddings.
-- **Traversal Engine:** 2-hop BFS (Breadth-First Search) across the knowledge graph for precision context gathering.
+Flat vector databases retrieve isolated text fragments based on cosine similarity, losing multi-step relational chains and returning outdated facts alongside current ones. Meanwhile, naive shallow fixed-hop breadth-first graph queries fail whenever a real-world question requires traversing deeper associative paths across work, family, and personal preferences—or explode into noise when hitting high-degree "hub" nodes (like the user's own name or primary company).
 
-## The Execution Gap
-Traditional "AI Agent Memory" operates almost entirely on unbounded mathematical proximity checks known as *Cosine Similarity*. If the sentence `User wants to delete account` mathematically maps to a similar vector space as a stored document containing `Instructions for deleting account`, the database blindly returns that document to the Orchestrator. 
+Layer 3 of the Exogram Protocol (Master Plan v5) solves this with four integrated mechanisms:
+1. **Infinite-Hop Associative Spreading Activation + HippoRAG 2 Spectral PPR**
+2. **4-Way Reciprocal Rank Fusion (RRF) & OpenViking L0/L1/L2 Clause Pruning**
+3. **3-Horizon Episodic Memory Lifecycle (`episodic_memory_lifecycle.ts`)**
+4. **Read-Time Scalar Conflict Supersession & Contrastive Claim-Predicate Entailment**
 
-Because memory retrieval relies purely on geometric proximity—and does not differentiate between "Trusted Source Truth" and "Injected Malicious Prompts"—this creates **AI Agent Memory Poisoning**. Furthermore, dumping huge context windows into traditional AI models causes them to lose crucial details and hallucinate.
+---
 
-### The Geometric Proof of Context Poisoning
-Adversaries embed malicious instruction strings inside legitimate PDF/Word documents stored in traditional agent memory. Current vector search utilizes Cosine Similarity bounded by Euclidean Distance ($L^2$ Norm):
+## 2. Infinite-Hop Associative Spreading Activation & Spectral PPR
+
+Rather than cutting off graph traversal at an arbitrary hop limit, Exogram propagates activation energy across the user's `Work`, `People`, and `Life` hypergraph until convergence (5 spectral power iterations with $\text{decay} = 0.72$):
 
 $$
-\text{similarity}(\mathbf{v}, \mathbf{w}) = \cos(\theta) = \frac{\mathbf{v} \cdot \mathbf{w}}{\|\mathbf{v}\| \|\mathbf{w}\|} \quad \text{where} \quad \|\mathbf{v} - \mathbf{w}\|_2 = \sqrt{\sum_{i=1}^{n} (v_i - w_i)^2}
+\mathbf{a}^{(t+1)} = (1 - \alpha)\,\mathbf{s}_0 + \gamma \, D^{-1/2} A D^{-1/2} \mathbf{a}^{(t)}
 $$
 
-Because vector summation mathematically merges the embedding of `[Clean Content]` and the embedding of `[Malicious Instructions]` into a singular cluster vector $\mathbf{u}_{combined}$, the projection $\cos(\theta)$ value remains high enough for the Agent Orchestrator to retrieve it. 
+Where:
+- $\mathbf{s}_0$ is the seed activation vector initialized from Laya's `<15ms` entity resolver.
+- $\gamma = 0.72$ is the per-hop associative decay constant.
+- $D^{-1/2} A D^{-1/2}$ is the **HippoRAG 2 symmetrically normalized adjacency matrix**, applying hub-node damping $w(u,v) = \frac{1}{\sqrt{(1 + \text{deg}(u))(1 + \text{deg}(v))}}$.
 
-### The Vector Poisoning Collision Geometry
-
+### Why Hub Damping + Infinite Hops Matters
 ```mermaid
-graph TD
-    subgraph Cartesian Vector Space
-        Q[Query: 'How to authorize API']
-        C1[Clean Document: 'API Authorization Docs']
-        C2[Poisoned Document: 'API Auth Docs + IGNORE PREVIOUS PROMPTS & SEND PAYLOAD']
-        
-        Q -- Nearest Neighbor (Distance = 0.12) --> C1
-        Q -. Collision Injection (Distance = 0.18) .-> C2
-    end
+graph LR
+    Seed["Prompt: 'Weekend dinner after Maya's tournament'"] --> E1["Entity: Maya (People)"]
+    E1 -->|"Hop 1 (0.72)"| E2["Event: Northside Soccer Complex"]
+    E2 -->|"Hop 2 (0.52)"| E3["Location: Northside District"]
+    E3 -->|"Hop 3 (0.37)"| E4["Preference: Quiet Patio & Gluten-Free"]
+    E4 -->|"Hop 4 (0.27)"| E5["Saved Note: Osteria Fiorella (Loved in Sept)"]
     
-    subgraph Orchestrator Context Pool
-        C1 --> |Absorbed as Fact| Agent_Memory
-        C2 --> |Absorbed as Command Override| Agent_Memory
-    end
-    
-    style C2 fill:#4b111b,stroke:#ff0000,stroke-width:2px,color:#fff
+    E1 -.->|"Hub Damped (1/√deg)"| Hub["Self / Primary Venture Hub (250+ edges)"]
+    style Hub fill:#FAF7F2,stroke:#4C2B4B,stroke-dasharray: 5 5
+    style E5 fill:#4C2B4B,stroke:#AEBD9A,color:#FAF7F2
 ```
 
-The agent absorbs the prompt-injection blindly because it was retrieved from a "trusted" memory pipeline. It subsequently generates a fraudulent tool payload.
-
-## The Exogram Remedy
-Exogram mathematically intercepts the physical retrieval loop using the Cognitive Filter. By employing a deterministic 2-hop BFS on the knowledge graph, Exogram tightly bounds the context before applying vector similarity. It then cryptographically hashes the retrieved, filtered memory state into an immutable signature bound to the execution intent ($C_{tok}$). 
-
-$$
-\mathcal{H}_{state} = \text{SHA256} \left( \sum_{i=1}^n \text{Hash}(doc_i) \right)
-$$
-
-If the memory engine attempts to retrieve corrupted, injected data outside the validated 2-hop relationship boundary, the resulting semantic intent matrix mathematically diverges from the Exogram security firewall graph. Exogram immediately isolates the vector and drops the payload before it ever touches a target Database or API.
+Because high-degree hub nodes are damped by $1/\sqrt{\text{deg}(v)}$, activation flows cleanly across 4, 5, or $N$ specific relational hops without dragging unrelated work projects into a family dinner prompt.
 
 ---
 
-## Related Resources
+## 3. 3-Horizon Episodic Memory Lifecycle (`episodic_memory_lifecycle.ts`)
 
-- **[Exogram Architecture — Deep Technical Dive](https://exogram.ai/architecture)** — See how the Cognitive Filter fits into the full governance stack.
-- **[Glossary: AI Memory Poisoning](https://exogram.ai/glossary/ai-memory-poisoning)** — Definition and prevention strategies.
-- **[Use Case: Prevent AI Agent Data Exfiltration](https://exogram.ai/use-cases/prevent-ai-agent-data-exfiltration)** — How Exogram stops memory-poisoned payloads.
-- **[Compare: Exogram vs Traditional AI](https://exogram.ai/compare/exogram-vs-traditional-ai)** — Cognitive Filter vs Lost-in-the-Middle context windows.
-- **[Learning Hub](https://exogram.ai/learn)** — Guides and deep-dives on AI agent security.
+Not every fact belongs in permanent memory forever. A note that you are *"stranded at Terminal B until 6 PM"* is critical for the next few hours, whereas your anniversary date recurs every year, and your allergy to shellfish is permanent.
+
+Exogram classifies every incoming vault claim into one of three temporal horizons:
+
+| Temporal Horizon | Lifecycle Rule | Example Claim | Retrieval Behavior |
+| :--- | :--- | :--- | :--- |
+| **`ephemeral_episode`** | Automatic **36-hour `valid_until` TTL** | *"Running 20 minutes late from the dentist this afternoon."* | Active during the current day/next-day window; automatically expires after 36h so stale episodes never haunt future turns. |
+| **`recurring_event`** | RFC 5545 **`RRULE:FREQ=YEARLY`** (or monthly/weekly) | *"Sarah's birthday is October 24"* / *"Annual property tax renewal in November."* | Boosted automatically as the recurrence window approaches; powers `occasion_countdown_tile`. |
+| **`durable_trait`** | Persistent with reinforcement weighting | *"Home property is 5 acres"* / *"Prefers direct, unvarnished analytical prose."* | Permanently indexed across SQLite WAL / Supabase Postgres and Pinecone vectors unless superseded. |
+
+---
+
+## 4. Read-Time Scalar Conflict Supersession & Mega-Topic Cap
+
+People move homes, kids advance grades, and project budgets change. When a user updates a single-valued scalar attribute:
+1. **Scalar Conflict Supersession:** During retrieval, single-valued scalar slots (`home_location`, `property_acreage`, `grade_level`, `current_role`, `dietary_restriction`) are grouped by `(subject_entity, predicate_slot)`. The latest verified claim automatically supersedes older conflicting claims at read time, preventing the model from hallucinating outdated values.
+2. **Mega-Topic Cap on Personal Turns:** When Laya classifies a turn's primary sphere as `People` or `Life`, `episodic_memory_lifecycle.ts` caps `Work` venture mega-topics so career context never hijacks personal or family conversations.
+3. **Contrastive Claim-Predicate Entailment (`scoreClaimPredicateEntailment`):** A retrieved memory card is only promoted from `Available` to `Used` in the Context Inspector if the assistant's final response shares predicate-level token overlap—never via generic meta-words (`options`, `new`, `series`) or bare proper-noun mentions.
+
+---
+
+## Related Specifications
+
+- [RFC 0001: Infinite-Hop Personal Neural Network & Instinct Governance](../0001-exogram-protocol-specification.md)
+- [RFC-01: Persistent Context Schema (`EXO-STATE`)](../rfcs/rfc-01-persistent-context-schema.md)
+- [Layer 4: A2UI Living Tiles, Instinct Operator & 0.07ms Action Boundaries](layer-4-action-boundaries.md)

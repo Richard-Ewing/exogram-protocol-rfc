@@ -1,32 +1,33 @@
-# RFC 0003: Cryptographic Execution Tokens ($C_{TOK}$)
+# RFC 0003: Cryptographic Execution Tokens ($C_{tok}$), Instinct Sentinel Gates & Instant Epistemic Undo
 
 **Network Working Group**  
-**Request for Comments:** 0003  
-**Category:** Cryptography & Identity Standards  
-**Author:** Exogram Protocol Team ([exogram.ai](https://exogram.ai))  
-**Date:** April 2026
+**Request for Comments:** 0003 (Master Plan v5)  
+**Category:** Cryptography, Action Governance & Memory Reversibility  
+**Author:** Richard Ewing, Exogram Protocol Team ([exogram.ai](https://exogram.ai))  
+**Updated:** October 2026
 
 ---
 
 > ### ⚡ The 2-Second Summary
-> While an AI takes 10 seconds to think, your database might change in the background. **Cryptographic Execution Tokens ($C_{tok}$)** bind approved actions to a specific snapshot of your data, preventing the AI from executing actions on outdated information.
+> While an AI reasons or navigates a browser, underlying context can change—and some actions should never fire without your explicit sign-off. **RFC 0003** binds every approved action to a 2-second **Cryptographic Execution Token ($C_{tok}$)**, pairs consequential browser/connector steps with **`[Approve Step]` / `[Take Over]`** sentinel controls, and guarantees 1-click reversibility for memory mutations via **`/api/memory/undo`**.
 
 ---
 
 ## 1. Abstract
 
-Upon successful verification of payload invariants (per RFC 0001), the Exogram Action Authorization Gate must transmit authorization across an untrusted network. This document establishes the strict byte-structure, hashing algorithms, and Time-To-Live (TTL) boundaries for the **Cryptographic Execution Token** ($C_{tok}$). 
+Autonomous execution requires two complementary safety guarantees:
+1. **Before Execution (Pre-Commit Governance):** When an AI kernel proposes sending an email, modifying a calendar, writing to the Memory Vault, or clicking a checkout button in the Instinct Browser Operator, the action must be bound to the exact context snapshot that justified it (preventing Time-Of-Check to Time-Of-Use drift) and gated by human-on-the-loop sentinel controls when irreversible.
+2. **After Execution (Post-Commit Reversibility):** When a memory consolidation or scalar supersession occurs in the Personal Neural Network, the user must be able to inspect and revert that mutation instantaneously with zero residual corruption.
 
-This token architecture specifically mitigates TOCTOU (Time-Of-Check to Time-Of-Use) state desynchronization events inherent to variable-duration stochastic agent inference.
+This specification defines the byte structure of the **Cryptographic Execution Token ($C_{tok}$)**, its integration with **Merit-Systems/OpenInstinct** human-on-the-loop gates (`[Approve Step]` and `[Take Over]`), and the reversible **Instant User Correction (`/api/memory/undo`)** protocol.
 
 ---
 
-## 2. Token Geometry and Algorithms
+## 2. Token Geometry and Algorithms ($C_{tok}$)
 
-The Execution Token MUST follow the JSON Web Token (JWT) IETF RFC 7519 standard structure, utilizing **HS256** (HMAC using SHA-256) signature verification.
+Every authorized mutation in the Exogram Runtime MUST carry an HS256-signed JSON Web Token (RFC 7519) binding the kernel identity, sphere boundary, payload hash, and state hash.
 
-### 2.1 The Header (`JOSE`)
-The header rigidly defines the symmetric hashing mechanism.
+### 2.1 JOSE Header
 ```json
 {
   "alg": "HS256",
@@ -34,79 +35,84 @@ The header rigidly defines the symmetric hashing mechanism.
 }
 ```
 
-### 2.2 The Payload Geometry
-The payload MUST uniquely bind the agent identity, the target operation, and both the state and payload mathematical representations.
-
+### 2.2 Canonical Payload Geometry
 ```json
 {
-  "iss": "exogram.network",
-  "sub": "agent_alpha_node_1",
-  "target_tool": "stripe_refund_api",
-  "payload_hash": "a4d3f6b9c2a89f1d",
-  "state_hash": "b8f1e40a2c9d8e7b",
-  "iat": 1713028300,
-  "exp": 1713028302
+  "iss": "exogram.ai",
+  "sub": "kernel:action_and_draft",
+  "scope": "work",
+  "target_tool": "gmail_send_draft",
+  "sentinel_mode": "approve_step_confirmed",
+  "payload_hash": "sha256:9f4d3c2b1a8e7f6d5c4b3a2918273645...",
+  "state_hash": "sha256:b8f1e40a2c9d8e7b6a5f4e3d2c1b0a9f...",
+  "undo_cursor_id": "undo_01J9X8K2M4P7Q9R3",
+  "iat": 1760912400,
+  "exp": 1760912402
 }
 ```
 
 #### Field Definitions
-- `payload_hash`: The SHA-256 hash of the exact JSON payload the agent is attempting to execute. If a single byte changes in transit, the signature is invalidated.
-- `state_hash`: The SHA-256 hash of the specific vector/graph context variables evaluated during the Intent Evaluation. Required for TOCTOU mitigation.
-- `exp`: (Expiration Time). Defined below in the TTL Constraints section.
+- `sub`: The specific first-party kernel proposing the action (e.g., `kernel:action_and_draft`, `kernel:instinct_operator`, `kernel:neural_graph`).
+- `scope`: The isolated sphere (`household` or `work`) validated under RFC 0002.
+- `sentinel_mode`: Indicates whether the token was minted automatically via low-risk pre-mutation rules (`auto_governed`) or explicitly confirmed by the user via `[Approve Step]` (`approve_step_confirmed`).
+- `payload_hash`: SHA-256 digest of the canonicalized JSON tool arguments. Modifying a single character invalidates the signature.
+- `state_hash`: SHA-256 digest of the active Personal Neural Network subgraph and turn trace state at evaluation time.
+- `undo_cursor_id`: Pre-allocated rollback pointer registered in `turn_traces` for reversible mutations.
 
 ---
 
-## 3. TOCTOU Handshake Flow (Time-Of-Check to Time-Of-Use)
+## 3. Human-on-the-Loop Sentinel Controls (`[Approve Step]` & `[Take Over]`)
 
-The most severe unmanaged vulnerability in multi-agent orchestration is state desynchronization. Because inference can take $5$ to $60$ seconds, the database state may change between the context retrieval and the action execution.
+Inspired by `Merit-Systems/OpenInstinct` and `mariagorskikh/open-instinct`, Exogram classifies actions into three execution tiers within `instinct_operator.ts`:
 
-The Exogram protocol solves this mathematically using the `state_hash` embedded in the $C_{tok}$.
+| Action Tier | Examples | Governance Requirement |
+| :--- | :--- | :--- |
+| **Tier 0: Read-Only & Generative UI** | `search_memory_vault`, `render_live_widget`, `branded_diagram_tile`, `hyperframes_video_tile` | Validated by `validateTileSpecProvenance`; zero blocking latency. |
+| **Tier 1: Reversible Vault Writes** | `update_memory_vault` (`ephemeral_episode`, `recurring_event`, `durable_trait`) | Gated by `evaluateInstinctPreMutationGate` (`<0.07ms`) + emits `memory_undo_tile` backed by `/api/memory/undo`. |
+| **Tier 2: Consequential External Actions** | Sending outbound emails (`action_draft_tile`), submitting forms/errands in `instinct_computer_tile`, calendar invitations | Pauses execution at the action boundary; renders interactive **`[Approve Step]`** and **`[Take Over]`** controls in the workspace before minting $C_{tok}$. |
 
 ```mermaid
 sequenceDiagram
-    participant Agent as Agent Client
-    participant DB as Target Database
-    participant Gate as Action Authorization Gate
-    
-    Note over Agent,DB: Inference Starts (time=T0)
-    Agent->>DB: Read State (User Balance = $100)
-    DB-->>Agent: Returns State
-    
-    Note over Agent: Agent spends 10 seconds reasoning
-    Note over DB: Exogenous User Action (time=T5)
-    DB->>DB: User withdraws $50 (Balance = $50)
-    
-    Note over Agent,Gate: Inference Completes (time=T10)
-    Agent->>Gate: Submit Payload: Transfer $100
-    Gate->>Gate: Validates Invariants against T0 Context
-    Gate-->>Agent: Mints C_TOK (state_hash = Hash($100))
-    
-    Agent->>DB: Executes HTTP Transfer with C_TOK
-    DB->>DB: Check Live State Hash vs C_TOK state_hash
-    Note over DB: Hash($50) != Hash($100)
-    DB-->>Agent: HTTP 409 Conflict (Transaction Blocked)
-```
+    participant User as User Workspace
+    participant Instinct as Instinct Operator / Action Kernel
+    participant Gate as 0.07ms Execution Gate
+    participant Connector as External Target / Vault
 
-By enforcing that the downstream target node mathematically calculates its *live* state hash in $< 1\text{ms}$ and verifies it against the token's expected state hash, TOCTOU desynchronizations are entirely eradicated.
+    Instinct->>Gate: Stage Tier 2 Action (e.g. Send Email / Submit Booking)
+    Gate-->>User: Render action_draft_tile / instinct_computer_tile with [Approve Step] & [Take Over]
+    alt User Clicks [Approve Step]
+        User->>Gate: Confirm step against current UI state
+        Gate->>Gate: Verify Live State Hash == Context State Hash (<0.07ms)
+        Gate->>Connector: Mint 2-second C_tok & execute action
+        Connector-->>User: Execution receipt + audit trace logged
+    else User Clicks [Take Over]
+        User->>Instinct: Handoff interactive session control to User
+        Instinct-->>User: Agent yields control immediately; logs handoff state
+    else Context Drifted (TOCTOU Mismatch)
+        Gate-->>User: HTTP 409 State Drift — refreshes tile with updated state
+    end
+```
 
 ---
 
-## 4. Time-To-Live (TTL) Expiration Constraints
+## 4. Instant Epistemic Correction (`/api/memory/undo`)
 
-Because an Execution Token is only valid for a specific subset of state and memory dynamics, granting long-term validity exposes the network to replay attacks.
+Even when `evaluateInstinctPreMutationGate` approves a vault write or scalar conflict supersession, human nuance is sovereign. If an AI infers a preference or updates a scalar fact that the user wishes to reject:
 
-The Exogram Action Authorization Gate MUST enforce ultra-narrow TTL lifetimes based on the physical transport latency required to reach the target API.
+1. **Immediate Exclusion:** Triggering **Undo** on a `memory_undo_tile` (or stating a conversational correction handled by `correction_handler.ts`) invokes `/api/memory/undo` with the `undo_cursor_id`.
+2. **Cryptographic Rollback:** The runtime marks the rejected claim as `superseded_by_user_correction`, restores the prior scalar value in SQLite WAL and Supabase Postgres, and purges the rejected vector from active retrieval.
+3. **Live Re-Verification:** The turn trace records the correction so subsequent turns never resurface the rejected assumption.
 
-Let $\delta_{network}$ represent average internal cluster ping times (e.g., $5\text{ms}$).
-Let $\tau_{buffer}$ represent standard computational overhead (e.g., $1000\text{ms}$).
+---
+
+## 5. Time-To-Live (TTL) Expiration Constraints
+
+Because an Execution Token ($C_{tok}$) authorizes a state transition at a specific moment in time, long-lived tokens invite replay vulnerabilities. The Exogram Gate enforces a strict 2-second maximum TTL:
 
 $$
-\text{TTL}_{token} \leq \delta_{network} \times 2 + \tau_{buffer}
+\text{TTL}_{C_{tok}} = \text{exp} - \text{iat} \le 2000\text{ms}
 $$
 
-Any $C_{tok}$ exceeding a $2$-second lifespan is formally deemed non-compliant and SHOULD trigger an incident report to the Agent Orchestrator. 
-
-## 5. Conclusion
-A mathematically verified intent is useless if the executing token can be intercepted, delayed, or run against an altered backend graph. The Exogram $C_{tok}$ standard finalizes the absolute security edge by cementing state at the millisecond of authorization.
+Any token presented after expiration or against a mutated `state_hash` is deterministically rejected with `HTTP 409 Conflict`.
 
 **End of RFC 0003**

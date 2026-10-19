@@ -1,102 +1,105 @@
-# RFC-03: The Auditable Ledger Format
+# RFC-03: The Auditable Ledger Format (`turn_traces` &Master Plan v5 Schema)
 
-**Status:** Draft  
+**Status:** Active Standard (Master Plan v5)  
 **Author:** Richard Ewing  
-**Created:** 2026-05-27  
-**Standard:** Exogram Protocol v1
+**Updated:** October 2026  
+**Standard:** Exogram Protocol v5
 
 ---
 
 > ### ⚡ The 2-Second Summary
-> Standard AI chat logs only record prompts and text answers. The **Auditable Ledger Format** records cryptographic hashes, policy decisions, and state snapshots for every tool action—providing a tamper-evident record of *why* an action was taken and who authorized it.
+> Standard chat logs only store raw text prompts and completions. **RFC-03** defines the cryptographically chained **`turn_traces`** and **Master Plan v5** audit schema—recording which of the **6 Honest Kernels** were genuinely cited, which context cards passed **`scoreClaimPredicateEntailment`**, every **`0.07ms` Instinct Gate** decision, and the **`/api/memory/undo`** rollback pointer.
 
 ---
 
-## Abstract
+## 1. Abstract
 
-This RFC proposes a verifiable, append-only standard for logging AI execution history — transforming passive AI memory into enterprise-grade accountability infrastructure.
+To guarantee epistemic transparency and instant reversibility, an AI runtime must log more than input/output strings. It must record the exact provenance of every retrieved claim, the post-synthesis citation status of every dispatched kernel, the validation telemetry of every rendered A2UI Living Tile, and the cryptographic state hash of every vault or connector mutation.
 
-## Goal
+## 2. The 9 Core Master Plan v5 Persistence Tables
 
-Create a verifiable, append-only standard for logging AI execution history that captures not just what happened, but *why* it happened and *who authorized it*.
+In production (`20261018_master_plan_v5_core_tables.sql`), the Exogram Auditable Ledger coordinates across 9 core operational tables:
+1. **`turn_traces`** — Append-only, SHA-256-chained per-turn execution telemetry, Laya `<15ms` timing, kernel citation verification, and `undo_cursor_id` pointers.
+2. **`ready_for_you_feed`** — Proactive, grounded briefings and occasion countdown cards synthesized from the Personal Neural Network.
+3. **`proactive_runs`** — Scheduled background consolidation, dream cycle deduplication, and `RRULE:FREQ=YEARLY` horizon evaluations.
+4. **`user_workspace_tiles`** — Stateful A2UI Living Tiles pinned or updated across turns.
+5. **`workspace_boards`** — Multi-tile project, household, and decision boards.
+6. **`tile_templates`** — Canonical schema definitions for the 13 A2UI Composable Living Tiles.
+7. **`tool_catalog`** — Semantic index powering the 8–12 Tool Selector (`tool_discovery.ts`).
+8. **`sandbox_tool_runs`** — Isolated execution logs for `open_generative_sandbox` and `extract_public_page_records` with `provenance.untrusted_content` envelopes.
+9. **`agent_instances`** — State and A2A trust scope (`Household` vs. `Work`) for the 6 Honest Kernels and Instinct Operator sessions.
 
-## Core Challenge
+---
 
-Standard AI logs just show input (prompt) and output (response). The Exogram ledger must capture **State Hash** + **Active Governance Policy** + **Attempted Action** + **Approval/Denial Code**. This RFC designs the exact data structure required for an enterprise compliance team to trace exactly *why* an agent took an action.
-
-## Design Principles
-
-1. **Append-Only** — Ledger entries are immutable. No modification, no deletion (except GDPR hard-delete).
-2. **Cryptographically Chained** — Each entry references the hash of the previous entry, creating a tamper-detectable chain.
-3. **Complete Provenance** — Every entry captures the full evaluation context: who, what, when, why, and the governance decision.
-4. **Queryable** — The ledger must support efficient querying for compliance audits, incident response, and forensic analysis.
-5. **Per-Request Telemetry** — Every evaluation logs `compute_latency_ms`, `agent_id`, `raw_intent`, and the policy version.
-
-## Ledger Entry Schema
+## 3. Canonical `turn_traces` Ledger Entry Schema
 
 ```json
 {
-  "ledger_entry": {
-    "entry_id": "uuid-v4",
-    "timestamp": "ISO-8601",
-    "previous_hash": "sha256:...",
-    "entry_hash": "sha256:...",
-    
-    "agent": {
-      "agent_id": "agt_8f72c91a",
-      "model": "claude-4-opus",
-      "framework": "langchain-v0.3"
+  "turn_trace": {
+    "trace_id": "trc_01J9X8K2M4P7Q9R3",
+    "timestamp": "2026-10-19T22:20:00Z",
+    "previous_hash": "sha256:a1b2c3d4e5f67890...",
+    "entry_hash": "sha256:f0e9d8c7b6a54321...",
+    "laya_preflight": {
+      "duration_ms": 9.2,
+      "subtask_data_policy": "PERSONAL",
+      "primary_sphere": "people",
+      "work_mega_topic_capped": true
     },
-    
-    "evaluation": {
-      "raw_intent": "Delete all records from users table where last_login < 2025-01-01",
-      "action": "DELETE_RECORDS",
-      "target_system": "production_postgres",
-      "state_hash_at_evaluation": "sha256:...",
-      "state_hash_at_commit": "sha256:...",
-      "state_match": true
+    "inference_routing": {
+      "personal_model": "gemini-3.8-flash",
+      "public_subtasks_scrubbed": true,
+      "outbound_tool_count": 9
     },
-    
-    "governance": {
-      "policy_version": "v1.4.2",
-      "rules_evaluated": 8,
-      "result": "BLOCKED",
-      "reason_code": "RULE_04: NO_DESTRUCTIVE_ACTIONS_IN_PROD",
-      "compute_latency_ms": 0.07
+    "kernel_verification": [
+      {
+        "kernel": "Neural Graph Kernel",
+        "status": "Complete · Cited",
+        "cited_claims": ["clm_01J9X8K2", "clm_01J9X9A1"]
+      },
+      {
+        "kernel": "Generative UI Kernel",
+        "status": "Complete · Cited",
+        "rendered_tiles": ["curated_places", "checklist", "memory_undo_tile"]
+      },
+      {
+        "kernel": "Live Web & Places Scout",
+        "status": "Complete · Cited",
+        "untrusted_content_isolated": true
+      }
+    ],
+    "claim_predicate_attribution": {
+      "used_claim_ids": ["clm_01J9X8K2", "clm_01J9X9A1"],
+      "available_uncited_claim_ids": ["clm_01H8K3L2"],
+      "entailment_scorer": "scoreClaimPredicateEntailment"
     },
-    
-    "outcome": {
-      "execution_permitted": false,
-      "execution_token": null,
-      "escalation_target": "security-team@company.com"
+    "instinct_governance": {
+      "pre_mutation_gate": "PASSED",
+      "compute_latency_ms": 0.07,
+      "state_hash_at_evaluation": "sha256:b8f1e40a2c9d8e7b...",
+      "undo_cursor_id": "undo_01J9X8K2M4P7Q9R3",
+      "undo_endpoint": "/api/memory/undo"
     }
   }
 }
 ```
 
-## Why Standard Logs Are Insufficient
+---
 
-| Feature | Standard AI Logs | Exogram Auditable Ledger |
-|---------|-----------------|-------------------------|
-| What happened | ✅ Input/Output | ✅ Full action detail |
-| Why it happened | ❌ | ✅ Policy rule + reason code |
-| Who authorized it | ❌ | ✅ Governance decision chain |
-| State at decision time | ❌ | ✅ SHA-256 state hash |
-| Tamper detection | ❌ | ✅ Cryptographic chaining |
-| Compliance-ready | ❌ | ✅ SOC 2 / GDPR compatible |
+## 4. Why Standard AI Logs Are Insufficient
 
-## Compliance Use Cases
-
-1. **SOC 2 Audit** — Auditor asks: "Show me every action Agent X took in the last 90 days and why each was permitted."
-2. **Incident Response** — Security team asks: "What state was the system in when Agent Y attempted to delete production data?"
-3. **GDPR Right to Erasure** — User requests deletion. The ledger must support hard-delete of all user-associated vectors, ciphertext, and records while maintaining the audit chain integrity.
-
-## Open Questions
-
-- What is the optimal storage backend for append-only ledger entries at scale?
-- How should ledger entries be compressed for long-term archival?
-- What is the retention policy for ledger entries in different compliance regimes?
+| Capability | Standard AI Logs | Exogram `turn_traces` Ledger (v5) |
+| :--- | :--- | :--- |
+| **Input / Output Text** | ✅ Recorded | ✅ Recorded with `ensureCompleteConversationalProse` check |
+| **Kernel Citation Truth** | ❌ Every dispatched agent claims success | ✅ Verified post-synthesis via `verifyAgentContributionsAgainstTurnOutput` |
+| **Context Attribution (`Used` vs `Available`)** | ❌ Raw RAG dump | ✅ Predicate-level entailment via `scoreClaimPredicateEntailment` |
+| **Living Tile Provenance** | ❌ Unchecked JSON | ✅ Validated via `validateTileSpecProvenance` |
+| **1-Click Epistemic Rollback** | ❌ Manual database edits | ✅ Instant undo via `/api/memory/undo` + `memory_undo_tile` |
 
 ---
 
-**Related:** [Exogram Architecture](https://exogram.ai/architecture) · [Security & Compliance](https://exogram.ai/security-and-compliance) · [Trust Center](https://exogram.ai/trust-center)
+## Related Specifications
+
+- [RFC 0001: Infinite-Hop Personal Neural Network & Instinct Governance](../0001-exogram-protocol-specification.md)
+- [RFC 0003: Cryptographic Execution Tokens ($C_{tok}$) & Instant Undo](../0003-cryptographic-execution-tokens.md)
+- [RFC-01: The Persistent Context Schema (`EXO-STATE` v5)](rfc-01-persistent-context-schema.md)

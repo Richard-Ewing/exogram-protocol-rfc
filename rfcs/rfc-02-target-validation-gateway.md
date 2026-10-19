@@ -1,100 +1,104 @@
-# RFC-02: Target Validation Gateway
+# RFC-02: Target Validation Gateway, Instinct Pre-Mutation Gate & A2UI Provenance Validator
 
-**Status:** Draft  
+**Status:** Active Standard (Master Plan v5)  
 **Author:** Richard Ewing  
-**Created:** 2026-05-27  
-**Standard:** Exogram Protocol v1
+**Updated:** October 2026  
+**Standard:** Exogram Protocol v5
 
 ---
 
 > ### ⚡ The 2-Second Summary
-> Evaluating AI actions using other slow, probabilistic LLMs is too unreliable and expensive. The **Target Validation Gateway** uses fast, compiled Boolean code rules to approve or block proposed actions in under 1ms.
+> Using slow, probabilistic LLM-as-a-Judge prompts to police AI tool calls adds seconds of latency and still fails under indirect prompt injection. **RFC-02** defines the **`0.07ms` Target Validation Gateway** combining **`evaluateInstinctPreMutationGate`** (for vault writes), **`validateTileSpecProvenance`** (for 13 A2UI Living Tiles), and **`[Approve Step]` / `[Take Over]`** sentinel controls.
 
 ---
 
-## Abstract
+## 1. Abstract
 
-This RFC proposes an execution gateway that processes go/no-go decisions at sub-runtime latencies, enabling autonomous AI agents to be safely deployed in production environments.
+This specification defines the deterministic validation gateway executing between the 6 Honest Kernels (`agent_swarm_router.ts`) and all downstream state targets (the Memory Vault, the A2UI Living Tile stream, and external FastMCP / Instinct connectors).
 
-## Goal
+## 2. Three Deterministic Gate Pipelines
 
-Establish a Target Validation gateway that evaluates whether an agent's proposed action should be permitted — using fast, binary policy rules instead of probabilistic LLM-as-a-judge approaches.
-
-## Core Challenge
-
-If the verification check takes too long, autonomous loops break down. Probabilistic LLM-as-a-judge approaches are too slow and unreliable. This RFC proposes moving governance checks to deterministic policy engines (fast, binary rules) to safely gate API and tool calls natively.
-
-## Design Principles
-
-1. **Deterministic** — The gateway must produce the same result given the same inputs. Zero randomness in enforcement.
-2. **Sub-millisecond** — Policy evaluation must complete in under 1ms to avoid breaking autonomous execution loops.
-3. **Fail-closed** — If the gateway cannot evaluate, the action is denied. Never default to allow.
-4. **Zero Model Inference** — The judgment engine uses server-side code logic gates, not LLM inference. No probabilistic evaluation.
-5. **Cryptographic Verification** — Each approved action generates a SHA-256 state hash and execution token.
-
-## Architecture
-
-```
-Agent proposes action
+```text
+Proposed Kernel Output (Vault Write / Living Tile / Connector Call)
     │
     ▼
-┌─────────────────────────────┐
-│  Policy Rule Engine         │  8 deterministic rules
-│  (Python logic gates)       │  Zero LLM inference
-└──────────┬──────────────────┘
-           │
-    ┌──────┴──────┐
-    │             │
-  ALLOW        BLOCK
-    │             │
-    ▼             ▼
-Generate      Return 403
-Exec Token    + Reason Code
-    │
-    ▼
-SHA-256 State Hash
-    │
-    ▼
-Commit Validation
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Exogram Target Validation Gateway (< 0.07ms Compiled Logic, Zero LLM)   │
+│  • Gate A: evaluateInstinctPreMutationGate (bhouvana/Instinct)          │
+│  • Gate B: validateTileSpecProvenance + rescueMalformedWidgetEnvelope   │
+│  • Gate C: Household vs. Work Scope + State Hash H(S_live)==H(S_ctx)    │
+└──────────────────┬───────────────────────────────────┬──────────────────┘
+                   │                                   │
+                ALLOW                                BLOCK / SENTINEL
+                   │                                   │
+                   ▼                                   ▼
+   Mint 2s C_tok + Undo Cursor          Emit [Approve Step] / [Take Over]
+   Commit to Vault / Stream Tile        or Reject Untrusted Injection (403)
 ```
 
-## Evaluation Payload
+### 2.1 Gate A: Instinct Pre-Mutation Gate (`evaluateInstinctPreMutationGate`)
+Before `update_memory_vault` writes any claim to SQLite WAL or Supabase Postgres, Gate A verifies:
+- The mutation did not originate from an untrusted web extraction (`provenance.untrusted_content == false`).
+- The claim has valid 3-Horizon metadata (`ephemeral_episode` 36h TTL, `recurring_event` `RRULE:FREQ=YEARLY`, or `durable_trait`).
+- Single-valued scalar updates link cleanly to `supersedes_claim_id` and generate a reversible `undo_cursor_id` for `/api/memory/undo`.
+
+### 2.2 Gate B: A2UI Living Tile Provenance Validator (`validateTileSpecProvenance`)
+Before streaming any of the 13 Living Tiles (`action_draft`, `checklist`, `decision_matrix`, `curated_places`, `comparison_table`, `retail_deals_tile`, `media_watch_tile`, `occasion_countdown_tile`, `memory_undo_tile`, `agent_hud_tile`, `branded_diagram_tile`, `hyperframes_video_tile`, `instinct_computer_tile`), Gate B enforces:
+- No placeholder checklists on factual media lookups.
+- No ungrounded retail prices, ratings, or fabricated decision scores (`Sourced` vs. `Estimated` attribution required).
+- Automatic envelope repair via `rescueMalformedWidgetEnvelope`.
+
+### 2.3 Gate C: Consequential Connector & Browser Sentinel (`Merit-Systems/OpenInstinct`)
+When `Action & Draft Kernel` or `instinct_computer_tile` proposes an external side-effect (sending an email, modifying a calendar, or submitting a browser checkout), Gate C verifies `Household` vs. `Work` A2A scope isolation and pauses for human-on-the-loop `[Approve Step]` or `[Take Over]` confirmation before minting the 2-second $C_{tok}$.
+
+---
+
+## 3. Canonical Evaluation Payload
 
 ```json
 {
   "evaluation_request": {
-    "agent_id": "agt_8f72c91a",
-    "action": "WRITE_DATABASE",
-    "target": "production_users_table",
-    "raw_intent": "Update user email to new value",
-    "context_hash": "sha256:...",
-    "policy_version": "v1.4.2"
+    "kernel_id": "kernel:action_and_draft",
+    "tool_name": "update_memory_vault",
+    "scope": "life",
+    "subtask_data_policy": "PERSONAL",
+    "provenance": {
+      "source_type": "user_prompt",
+      "untrusted_content": false
+    },
+    "proposed_claim": {
+      "horizon": "durable_trait",
+      "scalar_slot": "property_acreage",
+      "value": "5 acres"
+    },
+    "state_hash": "sha256:b8f1e40a2c9d8e7b..."
   },
   "evaluation_response": {
-    "permitted": false,
-    "reason": "RULE_04_VIOLATION: DESTRUCTIVE_ACTION_IN_PROTECTED_NAMESPACE",
+    "permitted": true,
+    "gate_evaluated": "evaluateInstinctPreMutationGate",
     "compute_latency_ms": 0.07,
-    "state_hash": "sha256:...",
-    "execution_token": null
+    "supersedes_claim_id": "clm_01H4P2M9",
+    "undo_cursor_id": "undo_01J9X8K2M4P7Q9R3",
+    "execution_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
   }
 }
 ```
 
-## Performance Requirements
+---
 
-| Metric | Target | Current |
-|--------|--------|---------|
-| Median Compute Latency | < 1ms | 0.07ms |
-| Sustained Throughput | > 100 RPS | 137 RPS |
-| False Positive Rate | 0% | 0% |
-| False Negative Rate | 0% | 0% |
+## 4. Performance Benchmarks
 
-## Open Questions
-
-- How should policy rules be versioned and deployed without downtime?
-- What is the governance model for adding/modifying policy rules?
-- How should multi-agent chains be evaluated (agent A calls agent B)?
+| Metric | Requirement | Production Benchmark |
+| :--- | :--- | :--- |
+| **Instinct & $C_{tok}$ Gate Latency** | `< 1.0ms` | **`0.07ms`** |
+| **Laya System 1 Preflight Latency** | `< 20ms` | **`< 15ms`** |
+| **LLM Calls in Safety Gate Path** | `0` | **`0`** |
+| **Post-Synthesis Citation Accuracy** | `100%` | **`100%`** (`verifyAgentContributionsAgainstTurnOutput`) |
 
 ---
 
-**Related:** [Exogram Architecture](https://exogram.ai/architecture) · [Protocol Overview](https://exogram.ai/protocol) · [Proving Ground](https://exogram.ai/proving-ground)
+## Related Specifications
+
+- [RFC 0001: Infinite-Hop Personal Neural Network & Instinct Governance](../0001-exogram-protocol-specification.md)
+- [RFC 0003: Cryptographic Execution Tokens ($C_{tok}$) & Instant Undo](../0003-cryptographic-execution-tokens.md)
+- [Layer 4: A2UI Living Tiles & Instinct Action Boundaries](../docs/layer-4-action-boundaries.md)

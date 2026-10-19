@@ -1,59 +1,90 @@
-# Layer 2: Orchestration & Connectors
+# Layer 2: 6-Point Agent Contract, 6 Honest Kernels & 8–12 Semantic Tool Selector
 
 > ### ⚡ The 2-Second Summary
-> Language models cannot safely interact with external tools without clear boundaries. **Layer 2** standardizes tool routing via the open Model Context Protocol (MCP), connecting your AI to files, email, and databases under user-defined permissions.
+> Flooding an LLM with 50+ tools degrades reasoning accuracy and invites prompt injection. **Layer 2** scopes every turn to **8–12 semantically matched tools**, wraps external tool outputs in **`provenance.untrusted_content`** envelopes, and orchestrates **6 Honest First-Party Kernels** whose contributions are verified against the final turn citations.
 
 ---
 
-## Abstract
-Because LLMs cannot natively run Python or JavaScript on their own servers, the **Orchestration Layer** was developed to construct the actual agentic wrappers. This layer passes the text context to the Intelligence layer, receives the JSON string output, maps it to a local function tool, executes it, and sends the result back to the LLM.
+## 1. Abstract
 
-## Components
-- **Frameworks:** LangChain, CrewAI, AutoGen, Letta.
-- **Role:** Finite State Machine management and loop routing $O_{state} \to O_{next\_state}$.
+Layer 2 (`agent_swarm_router.ts` and `tool_discovery.ts`) governs how intelligence models interact with tools, external data sources, and specialized execution kernels.
 
-## The Execution Gap: Turing Completeness Vulnerability
-Orchestration frameworks are incredibly powerful integration utilities, but they are architecturally incapable of acting as security boundaries. 
+Instead of exposing monolithic tool catalogs or opaque third-party bot personas, Layer 2 enforces three architectural guarantees:
+1. **The 6-Point Agent Contract & 6 Honest Kernels:** Every kernel has a transparent, first-party architectural role and must pass post-synthesis citation verification (`verifyAgentContributionsAgainstTurnOutput`) to be marked `Complete · Cited`.
+2. **The 8–12 Semantic Tool Selector:** Outbound tool declarations are dynamically scoped to 5 core meta-tools plus 5–7 semantically matched tools (`<= 12` per turn).
+3. **Normalized Provenance Envelopes:** All external tool results carry explicit `provenance.untrusted_content` and `residual_unknowns` metadata.
 
-Any LangChain or AutoGen routing loop is inherently a Turing Complete execution graph. Because they grant the `Agent` the authority to determine what state it should transition to next via probability, they are subservient to probabilistic variance. A widely exploited vulnerability in Multi-Agent workflows is the **Recursive Death Spiral**.
+---
 
-### The Recursive $While$ Loop
-If an LLM hallucinates an invalid string into an Integer API parameter, the Target API will reject it. LangChain's built-in tool error behavior is to throw the error back to the LLM and ask it to "fix it."
+## 2. The 6 Honest First-Party Kernels (`agent_swarm_router.ts`)
 
-Because the LLM relies on stochastic memory, it often generates the exact same hallucinated parameter sequentially.
+Exogram dispatches six specialized first-party kernels under the **6-Point Agent Contract**:
 
-```mermaid
-stateDiagram-v2
-    [*] --> Target_API : Try Transaction {"amt": "fifty"}
-    
-    Target_API --> Orchestrator_Loop : HTTP 400 (Expected Int, got String)
-    
-    state Orchestrator_Loop {
-        Log_Error --> LLM_Inference
-        LLM_Inference --> JSON_Generation
-        JSON_Generation --> Re_Execute
-    }
-    
-    Re_Execute --> Target_API : Try Transaction {"amt": "fifty"}
+| Kernel Name | Primary Responsibility | Subtask Policy | Citation & Verification Contract |
+| :--- | :--- | :--- | :--- |
+| **`Neural Graph Kernel`** | Traverses the Infinite-Hop Personal Neural Network (`Work · People · Life`), applies HippoRAG 2 Spectral PPR, and resolves scalar conflicts. | `PERSONAL` | Claims must pass `scoreClaimPredicateEntailment` to promote from `Available` to `Used`. |
+| **`Generative UI Kernel`** | Synthesizes and patches the 13 A2UI Composable Living Tiles (`branded_diagram_tile`, `hyperframes_video_tile`, `decision_matrix`, etc.). | `PERSONAL` | Validated by `validateTileSpecProvenance` and `rescueMalformedWidgetEnvelope`. |
+| **`Live Web & Places Scout`** | Executes PII-scrubbed public web search, venue lookups, and `extract_public_page_records`. | `PUBLIC_ONLY` | Outputs wrapped in `provenance.untrusted_content`; verified via `[1]`, `[2]` citations. |
+| **`Action & Draft Kernel`** | Prepares governed outbound communications (`action_draft_tile`), calendar blocks, and `instinct_computer_tile` trajectories. | `PERSONAL` | Gated by `[Approve Step]` / `[Take Over]` and $0.07\text{ms}$ $C_{tok}$ tokens. |
+| **`Analytical Synthesis Kernel`** | Performs multi-constraint reasoning, weighted scoring, and financial/technical comparisons. | `PERSONAL` | Differentiates `Sourced` vs. `Estimated` cells in `decision_matrix` and `comparison_table`. |
+| **`Grounded Citation Kernel`** | Audits claim-predicate overlap between retrieved context items and the final assistant response. | `PERSONAL` | Runs `verifyAgentContributionsAgainstTurnOutput` so only genuinely cited kernels show `Complete · Cited`. |
+
+### Post-Synthesis Citation Verification
+In conventional multi-agent UIs, every dispatched agent claims credit even if its output was ignored. In Exogram, `verifyAgentContributionsAgainstTurnOutput` inspects the final synthesized response and Living Tiles after generation:
+- Kernels whose retrieved records or artifacts appear with predicate-level entailment in the turn output receive **`Complete · Cited`**.
+- Kernels that executed in standby or whose candidate facts were not needed are honestly marked **`Standby · Uncited`**.
+
+---
+
+## 3. The 8–12 Semantic Tool Selector (`tool_discovery.ts`)
+
+Before calling the foundation model, `tool_discovery.ts` selects at most **12 tools** for the outbound `functionDeclarations` payload:
+
+### 3.1 The 5 Core Always-Available Meta-Tools
+1. `render_live_widget` — Emits any of the 13 schema-validated A2UI Composable Living Tiles.
+2. `search_memory_vault` — Queries the Infinite-Hop Personal Neural Network across `Work`, `People`, and `Life`.
+3. `update_memory_vault` — Proposes a 3-Horizon episodic or durable memory mutation (gated by `evaluateInstinctPreMutationGate`).
+4. `find_tool` — Dynamically expands domain-specific FastMCP connectors on demand if the turn requires a specialized integration.
+5. `extract_public_page_records` — Sandboxed extraction of structured entities, prices, or venues from public web pages.
+
+### 3.2 5–7 Semantically Matched Domain Tools
+Based on Laya's `<15ms` intent resolution, 5 to 7 additional FastMCP tools (Gmail, Google Calendar, Google Drive, Editorial SVG Diagram Engine, HyperFrames Video Composer, or Instinct Browser Operator) are attached. Crucially, core tools and Living Tiles are **never** gated behind brittle keyword regexes; the model decides tool invocations natively via System 2 reasoning.
+
+---
+
+## 4. Normalized Provenance Envelopes
+
+Every tool response returning into the reasoning loop is wrapped in a standardized provenance envelope:
+
+```json
+{
+  "tool_name": "extract_public_page_records",
+  "status": "ok",
+  "data": {
+    "venue_name": "Osteria Fiorella",
+    "rating": 4.8,
+    "price_tier": "$$$"
+  },
+  "provenance": {
+    "source_type": "public_web",
+    "untrusted_content": true,
+    "citation_id": "web-01",
+    "fetched_at": "2026-10-19T22:15:00Z"
+  },
+  "residual_unknowns": [
+    "Private patio availability for groups over 6 requires direct phone confirmation."
+  ]
+}
 ```
 
-As the number of recursively failed loops approach infinity $n \to \infty$, the Orchestrator will literally burn through enterprise cloud budgets, API quotas, and memory footprints. Orchestrators lack network-edge physical isolation from the Agent running inside them, meaning they cannot stop their own recursive loops.
-
-## The Exogram Remedy
-The Exogram API tracks agent execution flows using a stateless Cryptographic Ledger. By offloading tool routing safely through the Exogram SDK, the Exogram node mathematically bounds the recursion asymptote:
-
-$$
-\forall P \in \mathcal{T}, \text{If } \lim_{n \to \text{Threshold}} \text{Count}(P_{hash} \mid L[A_{id}]) \implies \text{Emit}(HTTP\_429)
-$$
-
-Before LangChain can burn $5,000 hitting Stripe's API with an infinite retry-loop, Exogram severs the HTTP connection at the network edge with an `HTTP 429 Too Many Requests` or `HTTP 409 Conflict`, mathematically neutralizing the death-loop logic block.
+- **`provenance.untrusted_content`:** Prevents indirect prompt injections inside scraped web pages from invoking `update_memory_vault` or mutating connectors.
+- **`residual_unknowns`:** Explicitly surfaces what the tool could *not* verify so the assistant preserves epistemic honesty instead of guessing.
 
 ---
 
-## Related Resources
+## Related Specifications
 
-- **[Use Case: Fix AutoGen Infinite Loops](https://exogram.ai/use-cases/fix-autogen-infinite-loop)** — Step-by-step guide to preventing recursive agent loops.
-- **[Use Case: Prevent AI Agent Double-Spend](https://exogram.ai/use-cases/prevent-ai-agent-double-spend)** — Stop duplicate financial transactions from agent retries.
-- **[Compare: Exogram vs CrewAI](https://exogram.ai/compare/exogram-vs-crewai)** — Multi-agent orchestration vs governance infrastructure.
-- **[Integrations Directory](https://exogram.ai/integrations)** — LangChain, CrewAI, AutoGen, and more.
-- **[API Reference](https://exogram.ai/docs/api)** — Integrate Exogram into your orchestration pipeline.
+- [RFC 0001: Infinite-Hop Personal Neural Network & Instinct Governance](../0001-exogram-protocol-specification.md)
+- [RFC 0002: Intent-Based Permissioning & Scope Isolation](../0002-intent-based-permissioning.md)
+- [Layer 3: Infinite-Hop Personal Neural Network & 3-Horizon Memory](layer-3-memory-vault-graph.md)
+- [Layer 4: A2UI Living Tiles, Instinct Operator & 0.07ms Action Boundaries](layer-4-action-boundaries.md)

@@ -1,139 +1,147 @@
-# Developer Tooling & Integrations (SDK / MCP / REST)
+# Developer Tooling & Integrations (Python SDK, TypeScript SDK & FastMCP Server)
+
+> **🚀 Runnable Open-Core Repository:** Clone and star **[Richard-Ewing/exogram-sdk](https://github.com/Richard-Ewing/exogram-sdk)** for the complete Python SDK (`exogram`), TypeScript SDK, and FastMCP Server (`mcp-server-exogram`).
 
 > ### ⚡ The 2-Second Summary
-> Add persistent memory and safe execution to any AI application in 3 lines of code. Use the official **Python SDK (`pip install exogram`)**, connect to Claude Desktop or Cursor via **Model Context Protocol (MCP)**, or integrate directly via the REST API.
+> Start locally in 30 seconds with **zero API key required** using `--local` SQLite WAL mode, or connect your cloud Memory Vault (`exogram.ai`) across Claude Desktop, Cursor, Windsurf, and Google Antigravity via **`pip install exogram`**, **`uvx mcp-server-exogram`**, or the remote MCP endpoint **`https://exogram.ai/api/mcp`**.
 
 ---
 
-## 1. Python SDK (`exogram`)
+## 1. Python SDK (`pip install exogram`)
 
-The official Python client provides typed interfaces for persisting facts, querying knowledge graphs, and evaluating tool actions with sub-millisecond latency.
+The official Python package provides both `Exogram` and `ExogramClient` (drop-in aliases) with full support for **zero-signup local SQLite WAL mode** and **Exogram Cloud mode**.
 
 ### Installation
 ```bash
-pip install exogram
+pip install exogram mcp-server-exogram
 ```
 
-### Storing and Querying Memories
+### Quickstart A: Zero-Signup Local Mode (SQLite WAL on Your Machine)
+Run the Infinite-Hop Personal Neural Network (`Work · People · Life`), 3-Horizon Episodic Memory, and `0.07ms` Instinct Action Governance entirely on-device—no cloud account required:
+
 ```python
 from exogram import Exogram
 
-client = Exogram(api_key="your_exogram_api_key")
+# Zero API key required: initializes ~/.exogram/vault.db in SQLite WAL mode
+client = Exogram(local=True)
 
-# 1. Record a verified memory into the personal vault
-memory = client.vault.store(
-    content="Sarah recommends Dr. Evelyn Miller at Northside Pediatrics for weekend walk-in care.",
-    namespace="personal",
-    confidence=0.95
+# 1. Store facts across 3-Horizon Episodic Memory (durable_trait, recurring_event, ephemeral_episode)
+client.vault.store(
+    content="Maya's spring soccer tournament is at Northside Complex; we prefer quiet patio dining afterward.",
+    namespace="people",
+    horizon="durable_trait"
 )
-print(f"Memory recorded: {memory.id}")
 
-# 2. Retrieve context with 2-hop graph reasoning
+# 2. Query with Infinite-Hop Associative Spreading Activation (decay=0.72, 1/√deg hub damping)
 results = client.vault.search(
-    query="Who was that pediatrician for weekend visits?",
-    namespace="personal",
-    top_k=3
+    query="Where should we eat after Maya's Saturday game?",
+    namespace="people",
+    top_k=5
 )
 
-for item in results:
-    print(f"[{item.score:.2f}] {item.content}")
+for match in results:
+    print(f"[{match.score:.2f} | {match.horizon}] {match.content}")
 ```
 
-### Decorating Tools with Verified Action Boundaries
+### Quickstart B: Exogram Cloud Mode + Governed Action Evaluation
+Upgrade seamlessly to cloud sync across web, mobile, and desktop agents by passing your `EXOGRAM_API_KEY`:
+
 ```python
-from exogram import Exogram
-from langchain.tools import tool
+from exogram import ExogramClient
 
-client = Exogram(api_key="your_exogram_api_key")
+client = ExogramClient(api_key="exo_live_...")
 
-@tool
-@client.governed(policy="database_write_safe", max_per_minute=10)
-def update_customer_record(customer_id: str, new_email: str):
-    """Updates a customer email address in PostgreSQL."""
-    # Action executes only if Exogram validates the payload in <0.07ms
-    pass
+# Evaluate a consequential tool call through the 0.07ms Instinct & C_tok Gate
+decision = client.governance.evaluate(
+    tool_name="gmail_send_draft",
+    scope="work",
+    payload={"to": "partner@firm.com", "subject": "Q4 Board Deck Follow-Up"},
+    untrusted_content=False
+)
+
+if decision.permitted:
+    print(f"Authorized with 2s state-bound token: {decision.execution_token}")
 ```
 
 ---
 
-## 2. Model Context Protocol (MCP) Server
+## 2. FastMCP Server (`mcp-server-exogram`)
 
-Exogram operates as a native [Model Context Protocol](https://modelcontextprotocol.io) server, enabling Claude Desktop, Cursor, and Windsurf to read from and write to your memory vault.
+Connect Claude Desktop, Cursor, Windsurf, or Google Antigravity directly to your Personal Neural Network using the Model Context Protocol (MCP).
 
-### Configuration (`claude_desktop_config.json`)
+### Option 1: Zero-Signup Local SQLite WAL MCP Server (`--local`)
+Add this to `claude_desktop_config.json` or `.cursor/mcp.json` to start immediately without an API key:
+
 ```json
 {
   "mcpServers": {
     "exogram": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-server-exogram"
-      ],
+      "command": "uvx",
+      "args": ["mcp-server-exogram", "--local"]
+    }
+  }
+}
+```
+
+### Option 2: Cloud-Synced Local MCP Server
+Sync your desktop coding assistant with your live [exogram.ai](https://exogram.ai) workspace:
+
+```json
+{
+  "mcpServers": {
+    "exogram": {
+      "command": "uvx",
+      "args": ["mcp-server-exogram"],
       "env": {
-        "EXOGRAM_API_KEY": "your_exogram_api_key"
+        "EXOGRAM_API_KEY": "YOUR_EXOGRAM_API_KEY"
       }
     }
   }
 }
 ```
 
-### Exposed MCP Tools
-- `exogram_store_memory`: Saves an important fact, preference, or event to the user's persistent vault.
-- `exogram_search_memory`: Searches memories using hybrid vector similarity and 2-hop graph traversal.
-- `exogram_get_knowledge_graph`: Retrieves the topological entity graph around a specific person, project, or concept.
-- `exogram_evaluate_action`: Evaluates a proposed tool execution against deterministic policy invariants.
+### Option 3: Hosted Remote MCP Endpoint (`https://exogram.ai/api/mcp`)
+For zero-install cloud MCP clients, connect directly over HTTPS with Bearer authentication:
+- **Endpoint:** `https://exogram.ai/api/mcp`
+- **Header:** `Authorization: Bearer <YOUR_EXOGRAM_API_KEY>`
+
+### Core Exposed MCP Tools
+- `search_memory_vault`: Queries your Infinite-Hop Personal Neural Network (`Work · People · Life`) with HippoRAG 2 Spectral PPR and Read-Time Scalar Conflict Supersession.
+- `update_memory_vault`: Stores or supersedes a `durable_trait`, `recurring_event` (`RRULE:FREQ=YEARLY`), or `ephemeral_episode` (36h TTL) after passing `evaluateInstinctPreMutationGate`.
+- `undo_memory_mutation`: Reverts any vault mutation instantaneously via `/api/memory/undo`.
+- `render_live_widget`: Compiles schema-validated A2UI Living Tiles (`branded_diagram_tile`, `decision_matrix`, `checklist`, `action_draft`, etc.).
+- `evaluate_governed_action`: Validates proposed tool calls in `<0.07ms` and mints state-hash execution tokens ($C_{tok}$).
 
 ---
 
-## 3. REST API
+## 3. REST & Streaming API (`https://exogram.ai/api`)
 
-For applications in Go, Rust, TypeScript, or bash, the Exogram REST API exposes standard endpoints:
-
-### Store Memory
+### Store a Memory Claim
 ```bash
-curl -X POST https://api.exogram.ai/v2/vault/store \
-  -H "Authorization: Bearer $EXOGRAM_KEY" \
+curl -X POST https://exogram.ai/api/memory/ledger \
+  -H "Authorization: Bearer $EXOGRAM_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "content": "Updated payment terms to Net 30 for ACME Corp contract.",
-    "namespace": "acme_project",
-    "source": "contract_pdf_v2"
+    "claim": "Moved to the 5-acre property in October; previous 2-acre lot is sold.",
+    "sphere": "life",
+    "horizon": "durable_trait"
   }'
 ```
 
-### Search Memory & Graph
+### Instant Epistemic Undo (`/api/memory/undo`)
 ```bash
-curl -X POST https://api.exogram.ai/v2/vault/search \
-  -H "Authorization: Bearer $EXOGRAM_KEY" \
+curl -X POST https://exogram.ai/api/memory/undo \
+  -H "Authorization: Bearer $EXOGRAM_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "query": "What are ACME payment terms?",
-    "namespace": "acme_project",
-    "top_k": 5
+    "undo_cursor_id": "undo_01J9X8K2M4P7Q9R3"
   }'
 ```
-
----
-
-## 4. Local-First Development with SQLite WAL
-
-For local testing or strict privacy requirements, Exogram can run entirely on-device without cloud connectivity:
-
-```python
-from exogram.local import LocalVault
-
-vault = LocalVault(db_path="./my_memory.db", encryption_key="user_secret_key")
-vault.store("Remember to pick up Leo at 3:15 PM")
-recalled = vault.search("Leo pickup time")
-```
-
-All data is stored in a local SQLite file with Write-Ahead Logging (WAL) enabled and PBKDF2/Fernet cryptographic encryption.
 
 ---
 
 ## Related Documentation
 
-- [RFC 0001: The Core Protocol Specification](../0001-exogram-protocol-specification.md)
-- [Layer 4: Systems of Record & Verified Action Boundaries](layer-4-action-boundaries.md)
-- [Synthesis: The Complete 4-Layer Personal AI Stack](synthesis-the-full-stack.md)
+- **[Richard-Ewing/exogram-sdk](https://github.com/Richard-Ewing/exogram-sdk)** — Source code, examples, and test suite for the Python/TS SDK and FastMCP server.
+- **[RFC 0001: The Core Protocol Specification](../0001-exogram-protocol-specification.md)** — Full Master Plan v5 architecture.
+- **[Layer 4: A2UI Living Tiles & Instinct Action Boundaries](layer-4-action-boundaries.md)** — Tile schemas and $C_{tok}$ verification.
